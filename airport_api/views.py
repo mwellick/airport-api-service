@@ -1,4 +1,4 @@
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import (
     Crew,
     Airport,
@@ -22,41 +22,41 @@ from .serializers import (
 )
 
 
-class CrewViewSet(GenericViewSet):
+class CrewViewSet(ModelViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
 
 
-class AirportViewSet(GenericViewSet):
+class AirportViewSet(ModelViewSet):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
 
 
-class RouteViewSet(GenericViewSet):
+class RouteViewSet(ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
 
 
-class AirplaneTypeViewSet(GenericViewSet):
+class AirplaneTypeViewSet(ModelViewSet):
     queryset = AirplaneType.objects.all()
     serializer_class = AirplaneTypeSerializer
 
 
-class AirplaneViewSet(GenericViewSet):
+class AirplaneViewSet(ModelViewSet):
     queryset = Airplane.objects.all()
     serializer_class = AirplaneSerializer
 
 
-class FlightViewSet(GenericViewSet):
+class FlightViewSet(ModelViewSet):
     queryset = Flight.objects.all()
     serializer_class = FlightSerializer
 
 
-class OrderViewSet(GenericViewSet):
+class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
-class TicketViewSet(GenericViewSet):
+class TicketViewSet(ModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
