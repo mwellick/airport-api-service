@@ -71,7 +71,8 @@ class FlightSerializer(serializers.ModelSerializer):
             "route",
             "airplane",
             "departure_time",
-            "arrival_time"
+            "arrival_time",
+            "flight_time",
         ]
 
 

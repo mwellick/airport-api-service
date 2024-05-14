@@ -35,6 +35,12 @@ class Route(models.Model):
     )
     distance = models.FloatField()
 
+    class Meta:
+        ordering = ["source"]
+
+    def __str__(self):
+        return f"{self.source.name} -> {self.destination.name}. Distance : {self.distance} km."
+
 
 class AirplaneType(models.Model):
     name = models.CharField(max_length=255)
@@ -76,6 +82,17 @@ class Flight(models.Model):
     )
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
+
+    @property
+    def flight_time(self):
+        return str(self.arrival_time - self.departure_time)
+
+    def __str__(self):
+        return (
+            f"{self.route.source.name} -> {self.route.destination.name}. "
+            f"Distance: {self.route.distance} km. "
+            f"Flight time: {self.flight_time}"
+        )
 
 
 class Order(models.Model):
