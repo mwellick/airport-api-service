@@ -1,4 +1,4 @@
-from rest_framework.viewsets import  ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from .models import (
     Crew,
     Airport,
@@ -18,7 +18,10 @@ from .serializers import (
     FlightSerializer,
     OrderSerializer,
     TicketSerializer,
-
+    FlightListSerializer,
+    RouteListSerializer,
+    FlightRetrieveSerializer,
+    RouteRetrieveSerializer,
 )
 
 
@@ -36,6 +39,19 @@ class RouteViewSet(ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action in ("list", "retrieve"):
+            return queryset.select_related()
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return RouteSerializer
+        elif self.action == "retrieve":
+            return RouteRetrieveSerializer
+        return RouteListSerializer
+
 
 class AirplaneTypeViewSet(ModelViewSet):
     queryset = AirplaneType.objects.all()
@@ -50,6 +66,22 @@ class AirplaneViewSet(ModelViewSet):
 class FlightViewSet(ModelViewSet):
     queryset = Flight.objects.all()
     serializer_class = FlightSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action in ("list", "retrieve"):
+            return queryset.select_related(
+                "route",
+                "airplane"
+            ).prefetch_related("crews")
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return FlightListSerializer
+        elif self.action == "retrieve":
+            return FlightRetrieveSerializer
+        return FlightSerializer
 
 
 class OrderViewSet(ModelViewSet):
