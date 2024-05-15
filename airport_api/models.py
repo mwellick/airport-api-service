@@ -2,8 +2,6 @@ from typing import Type
 
 from django.conf import settings
 from django.db import models
-from django.db.models import UniqueConstraint
-
 from user.models import User
 
 
@@ -41,6 +39,14 @@ class Route(models.Model):
 
     class Meta:
         ordering = ["source"]
+
+    @property
+    def km_to_miles(self):
+        return self.distance * 1.6
+
+    @property
+    def distance_km(self):
+        return f"{self.distance} km / {self.km_to_miles} miles"
 
     def __str__(self):
         return f"{self.source.name} -> {self.destination.name}. Distance : {self.distance} km."
@@ -180,8 +186,8 @@ class Ticket(models.Model):
 
     def __str__(self):
         return (
-            f"{self.flight.route.source.name} -> {self.flight.route.destination.name}: \n"
-            f"Ordered seats: Row: {self.row}  | Seat: {self.seat} \n"
+            f"{self.flight.route.source.name} -> {self.flight.route.destination.name}:\n"
+            f"Ordered seats: Row: {self.row}  | Seat: {self.seat}\n"
             f"Departure time: {self.flight.departure_time}\n"
             f"Arrival time: {self.flight.arrival_time}\n"
             f"Flight time: {self.flight.flight_time}\n"
