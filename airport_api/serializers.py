@@ -90,14 +90,20 @@ class AirplaneSerializer(serializers.ModelSerializer):
             "name",
             "rows",
             "seats_in_row",
-            "airplane_type"
+            "capacity",
+            "airplane_type",
+
         ]
 
 
 class AirplaneListSerializer(AirplaneSerializer):
     class Meta:
         model = Airplane
-        exclude = ["id", "rows", "seats_in_row"]
+        exclude = [
+            "id",
+            "rows",
+            "seats_in_row"
+        ]
 
 
 class FlightSerializer(serializers.ModelSerializer):
@@ -120,6 +126,8 @@ class FlightListSerializer(serializers.ModelSerializer):
         source="route.distance",
         read_only=True
     )
+    tickets_available = serializers.IntegerField(
+        read_only=True)
 
     class Meta:
         model = Flight
@@ -127,28 +135,14 @@ class FlightListSerializer(serializers.ModelSerializer):
             "id",
             "route",
             "airplane",
-            "distance"
-        ]
-
-
-class FlightRetrieveSerializer(FlightListSerializer):
-    crews = CrewSerializer(many=True)
-
-    class Meta:
-        model = Flight
-        fields = [
-            "route",
-            "airplane",
-            "crews",
-            "departure_time",
-            "arrival_time",
-            "flight_time",
-            "distance"
+            "distance",
+            "tickets_available"
         ]
 
 
 class TicketSerializer(serializers.ModelSerializer):
     flight = FlightListSerializer()
+
     class Meta:
         model = Ticket
         fields = [
@@ -236,9 +230,33 @@ class TicketRetrieveSerializer(serializers.ModelSerializer):
         ]
 
 
+class FlightRetrieveSerializer(FlightListSerializer):
+    crews = CrewSerializer(many=True)
+    taken_seats = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="seat",
+        source="flight_tickets"
+    )
+    tickets_available = serializers.IntegerField(
+        read_only=True)
+
+    class Meta:
+        model = Flight
+        fields = [
+            "route",
+            "airplane",
+            "crews",
+            "departure_time",
+            "arrival_time",
+            "flight_time",
+            "distance",
+            "taken_seats",
+            "tickets_available"
+        ]
+
+
 class OrderSerializer(serializers.ModelSerializer):
-
-
     class Meta:
         model = Order
         fields = [
@@ -258,7 +276,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderListSerializer(OrderSerializer):
-
     class Meta:
         model = Order
         fields = [

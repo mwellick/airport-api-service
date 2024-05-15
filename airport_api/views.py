@@ -1,3 +1,4 @@
+from django.db.models import Count, F
 from rest_framework.viewsets import ModelViewSet
 from .models import (
     Crew,
@@ -72,9 +73,15 @@ class FlightViewSet(ModelViewSet):
         queryset = self.queryset
         if self.action in ("list", "retrieve"):
             return queryset.select_related(
-                "route",
-                "airplane"
-            ).prefetch_related("crews")
+            ).prefetch_related("crews").annotate(
+                tickets_available=F(
+                    "airplane__rows"
+                ) * F(
+                    "airplane__seats_in_row"
+                ) - Count(
+                    "flight_tickets"
+                )
+            )
         return queryset
 
     def get_serializer_class(self):

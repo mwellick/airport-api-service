@@ -41,15 +41,18 @@ class Route(models.Model):
         ordering = ["source"]
 
     @property
-    def km_to_miles(self):
+    def km_to_miles(self) -> float:
         return self.distance * 1.6
 
     @property
-    def distance_km(self):
+    def distance_km(self) -> str:
         return f"{self.distance} km / {self.km_to_miles} miles"
 
     def __str__(self):
-        return f"{self.source.name} -> {self.destination.name}. Distance : {self.distance} km."
+        return (
+            f"{self.source.name} -> {self.destination.name}. "
+            f"Distance : {self.distance} km."
+        )
 
 
 class AirplaneType(models.Model):
@@ -75,6 +78,10 @@ class Airplane(models.Model):
     class Meta:
         ordering = ["name"]
 
+    @property
+    def capacity(self) -> int:
+        return self.rows * self.seats_in_row
+
     def __str__(self):
         return f"{self.name}. Type: {self.airplane_type}"
 
@@ -98,7 +105,7 @@ class Flight(models.Model):
     arrival_time = models.DateTimeField()
 
     @property
-    def flight_time(self):
+    def flight_time(self) -> str:
         return str(self.arrival_time - self.departure_time)
 
     def __str__(self):
@@ -136,6 +143,9 @@ class Ticket(models.Model):
         on_delete=models.CASCADE,
         related_name="tickets"
     )
+
+    class Meta:
+        ordering = ["seat"]
 
     @staticmethod
     def validate_seat_and_rows(
