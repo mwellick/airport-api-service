@@ -148,6 +148,7 @@ class FlightRetrieveSerializer(FlightListSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    flight = FlightListSerializer()
     class Meta:
         model = Ticket
         fields = [
@@ -176,8 +177,67 @@ class TicketSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class TicketListSerializer(serializers.ModelSerializer):
+    flight_info = serializers.CharField(source="flight", read_only=True)
+
+    class Meta:
+        model = Ticket
+        fields = [
+            "id",
+            "row",
+            "seat",
+            "flight_info",
+        ]
+
+
+class TicketRetrieveSerializer(serializers.ModelSerializer):
+    airplane = serializers.CharField(
+        source="flight.airplane",
+        read_only=True
+    )
+    departure_from = serializers.CharField(
+        source="flight.route.source.name",
+        read_only=True
+    )
+    arrival_to = serializers.CharField(
+        source="flight.route.destination.name",
+        read_only=True
+    )
+    distance = serializers.CharField(
+        source="flight.route.distance_km",
+        read_only=True
+    )
+    departure_time = serializers.CharField(
+        source="flight.departure_time",
+        read_only=True
+    )
+    arrival_time = serializers.CharField(
+        source="flight.arrival_time",
+        read_only=True
+    )
+    flight_time = serializers.CharField(
+        source="flight.flight_time",
+        read_only=True
+    )
+
+    class Meta:
+        model = Ticket
+        fields = [
+            "airplane",
+            "row",
+            "seat",
+            "departure_from",
+            "arrival_to",
+            "distance",
+            "departure_time",
+            "arrival_time",
+            "flight_time"
+
+        ]
+
+
 class OrderSerializer(serializers.ModelSerializer):
-    tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
+
 
     class Meta:
         model = Order
@@ -195,3 +255,19 @@ class OrderSerializer(serializers.ModelSerializer):
             ticket_data.pop("order", None)
             Ticket.objects.create(order=order, **ticket_data)
         return order
+
+
+class OrderListSerializer(OrderSerializer):
+
+    class Meta:
+        model = Order
+        fields = [
+            "id",
+            "created_at",
+            "tickets"
+
+        ]
+
+
+class OrderRetrieveSerializer(OrderListSerializer):
+    tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)

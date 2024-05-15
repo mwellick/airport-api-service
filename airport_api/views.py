@@ -21,7 +21,8 @@ from .serializers import (
     FlightListSerializer,
     RouteListSerializer,
     FlightRetrieveSerializer,
-    RouteRetrieveSerializer,
+    RouteRetrieveSerializer, TicketListSerializer, TicketRetrieveSerializer, OrderRetrieveSerializer,
+    OrderListSerializer,
 )
 
 
@@ -89,12 +90,34 @@ class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
+        if self.action in ("list", "retrieve"):
+            return self.queryset.select_related()
         return self.queryset.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def get_serializer_class(self):
+        if self.action == "list":
+            return OrderListSerializer
+        elif self.action == "retrieve":
+            return OrderRetrieveSerializer
+        return OrderSerializer
+
 
 class TicketViewSet(ModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action in ("list", "retrieve"):
+            return queryset.select_related()
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return TicketListSerializer
+        elif self.action == "retrieve":
+            return TicketRetrieveSerializer
+        return TicketSerializer
