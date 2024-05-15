@@ -14,7 +14,7 @@ class Crew(models.Model):
 
 
 class Airport(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     closest_big_city = models.CharField(max_length=255)
 
     class Meta:
@@ -56,7 +56,7 @@ class Route(models.Model):
 
 
 class AirplaneType(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     class Meta:
         ordering = ["name"]
@@ -66,7 +66,7 @@ class AirplaneType(models.Model):
 
 
 class Airplane(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,unique=True)
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
     airplane_type = models.ForeignKey(
