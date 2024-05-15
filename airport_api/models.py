@@ -1,5 +1,9 @@
+from typing import Type
+
 from django.conf import settings
 from django.db import models
+from django.db.models import UniqueConstraint
+
 from user.models import User
 
 
@@ -106,6 +110,12 @@ class Order(models.Model):
         on_delete=models.CASCADE
     )
 
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return str(self.created_at)
+
 
 class Ticket(models.Model):
     row = models.IntegerField()
@@ -118,5 +128,61 @@ class Ticket(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
-        related_name="order_tickets"
+        related_name="tickets"
     )
+
+    @staticmethod
+    def validate_seat_and_rows(
+            seat: int,
+            num_seats: int,
+            row: int,
+            num_rows: int,
+            error_to_raise: Type[Exception]
+    ):
+        if not (1 <= seat <= num_seats):
+            raise error_to_raise(
+                {
+                    "seat": f"seat must be in a range of "
+                            f"[1,{num_seats}],not [{seat}]"
+                }
+            )
+        elif not (1 <= row <= num_rows):
+            raise error_to_raise(
+                {
+                    "row": f"row must be in a range of "
+                           f"[1,{num_rows}],not [{row}]"
+                }
+            )
+
+    def clean(self):
+        Ticket.validate_seat_and_rows(
+            self.seat,
+            self.flight.airplane.seats_in_row,
+            self.row,
+            self.flight.airplane.rows,
+            ValueError
+        )
+
+    def save(
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None
+    ):
+        self.full_clean()
+        super(Ticket, self).save(
+            force_insert,
+            force_update,
+            using,
+            update_fields
+        )
+
+    def __str__(self):
+        return (
+            f"{self.flight.route.source.name} -> {self.flight.route.destination.name}: \n"
+            f"Ordered seats: Row: {self.row}  | Seat: {self.seat} \n"
+            f"Departure time: {self.flight.departure_time}\n"
+            f"Arrival time: {self.flight.arrival_time}\n"
+            f"Flight time: {self.flight.flight_time}\n"
+        )

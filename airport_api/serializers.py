@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 from .models import (
     Crew,
@@ -146,16 +147,6 @@ class FlightRetrieveSerializer(FlightListSerializer):
         ]
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = [
-            "id",
-            "created_at",
-            "user"
-        ]
-
-
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
@@ -164,5 +155,43 @@ class TicketSerializer(serializers.ModelSerializer):
             "row",
             "seat",
             "flight",
-            "order"
         ]
+
+    def validate(self, attrs):
+        Ticket.validate_seat_and_rows(
+            attrs["seat"],
+            attrs["flight"].airplane.seats_in_row,
+            attrs["row"],
+            attrs["flight"].airplane.rows,
+            serializers.ValidationError
+        )
+        if Ticket.objects.filter(
+                seat=attrs["seat"],
+                row=attrs["row"],
+                flight=attrs["flight"]
+        ).exists():
+            raise serializers.ValidationError(
+                {"detail": "This seat has already been taken for the selected flight"}
+            )
+        return attrs
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
+
+    class Meta:
+        model = Order
+        fields = [
+            "id",
+            "created_at",
+            "tickets"
+        ]
+
+    @transaction.atomic()
+    def create(self, validated_data):
+        tickets_data = validated_data.pop("tickets")
+        order = Order.objects.create(**validated_data)
+        for ticket_data in tickets_data:
+            ticket_data.pop("order", None)
+            Ticket.objects.create(order=order, **ticket_data)
+        return order
