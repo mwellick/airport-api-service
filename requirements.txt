@@ -3,6 +3,7 @@ Django==5.0.6
 django-debug-toolbar==4.3.0
 djangorestframework==3.15.1
 djangorestframework-simplejwt==5.3.1
+pillow==10.3.0
 PyJWT==2.8.0
 pytz==2024.1
 sqlparse==0.5.0
