@@ -100,9 +100,30 @@ class AirplaneListSerializer(AirplaneSerializer):
     class Meta:
         model = Airplane
         exclude = [
-            "id",
             "rows",
-            "seats_in_row"
+            "seats_in_row",
+            "image"
+        ]
+
+
+class AirplaneImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Airplane
+        fields = ["id", "image"]
+
+
+class AirplaneRetrieveSerializer(AirplaneSerializer):
+    class Meta:
+        model = Airplane
+        fields = [
+            "id",
+            "name",
+            "rows",
+            "seats_in_row",
+            "capacity",
+            "airplane_type",
+            "image"
+
         ]
 
 
