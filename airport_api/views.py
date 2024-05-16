@@ -10,6 +10,7 @@ from .models import (
     Order,
     Ticket,
 )
+from .permissions import IsAdminAllORIsAuthenticatedOrReadOnly
 from .serializers import (
     CrewSerializer,
     AirportSerializer,
@@ -38,6 +39,7 @@ class CrewViewSet(ModelViewSet):
 class AirportViewSet(ModelViewSet):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
+    permission_classes = [IsAdminAllORIsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         queryset = self.queryset
