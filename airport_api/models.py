@@ -1,7 +1,11 @@
+import pathlib
+import uuid
 from typing import Type
 
 from django.conf import settings
 from django.db import models
+from django.utils.text import slugify
+
 from user.models import User
 
 
@@ -65,8 +69,13 @@ class AirplaneType(models.Model):
         return self.name
 
 
+def airplane_image_path(instance: "Airplane", filename: str) -> pathlib.Path:
+    filename = f"{slugify(instance.name)}-{uuid.uuid4()}" + pathlib.Path(filename).suffix
+    return pathlib.Path("upload/airplanes") / pathlib.Path(filename)
+
+
 class Airplane(models.Model):
-    name = models.CharField(max_length=255,unique=True)
+    name = models.CharField(max_length=255, unique=True)
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
     airplane_type = models.ForeignKey(
@@ -74,6 +83,7 @@ class Airplane(models.Model):
         on_delete=models.CASCADE,
         related_name="airplanes"
     )
+    image = models.ImageField(null=True, upload_to=airplane_image_path)
 
     class Meta:
         ordering = ["name"]
