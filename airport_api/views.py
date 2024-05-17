@@ -92,6 +92,38 @@ class CrewViewSet(ModelViewSet):
             return CrewRetrieveSerializer
         return CrewSerializer
 
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of all crewmates",
+        description="User can get a list of all crewmates",
+        parameters=[
+            OpenApiParameter(
+                name="first_name",
+                description="Filter crewmates by their first name",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Michael"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="last_name",
+                description="Filter crewmates by their last name",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Ellipsis"
+                    )
+                ]
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 @extend_schema_view(
     create=extend_schema(
