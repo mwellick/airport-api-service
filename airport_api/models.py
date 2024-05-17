@@ -4,6 +4,7 @@ from typing import Type
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 
 from user.models import User
@@ -12,6 +13,11 @@ from user.models import User
 class Crew(models.Model):
     first_name = models.CharField(max_length=63)
     last_name = models.CharField(max_length=63)
+    flying_hours = models.FloatField(default=0)
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -117,6 +123,18 @@ class Flight(models.Model):
     @property
     def flight_time(self) -> str:
         return str(self.arrival_time - self.departure_time)
+
+    @property
+    def flight_is_over(self) -> bool:
+        now = timezone.now()
+        return now >= self.arrival_time
+
+    def update_flying_hours(self):
+        if self.flight_is_over:
+            hours_flight_time = (self.arrival_time - self.arrival_time).total_seconds() / 3600
+            for crew in self.crews.all():
+                crew.flying_hours += hours_flight_time
+                crew.save()
 
     def __str__(self):
         return (
