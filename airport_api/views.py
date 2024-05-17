@@ -1,4 +1,5 @@
 from django.db.models import Count, F, Q
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -31,20 +32,102 @@ from .serializers import (
     TicketListSerializer,
     TicketRetrieveSerializer,
     OrderRetrieveSerializer,
-    OrderListSerializer, AirplaneImageSerializer,
-    AirplaneRetrieveSerializer, AirplaneListSerializer,
+    OrderListSerializer,
+    AirplaneImageSerializer,
+    AirplaneRetrieveSerializer,
+    AirplaneListSerializer,
 )
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="Get list of all crew mates",
+        description="User can get a list of all crewmates"
+    ),
+    create=extend_schema(
+        summary="Create a crew mate",
+        description="Admin can create a new crewmate"
+    ),
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific crewmate",
+        description="User can get specific info about crewmate"
+    ),
+    update=extend_schema(
+        summary="Update specific info about crewmate",
+        description="Admin can update information about specific crewmate"
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific crewmate",
+        description="Admin can make a partial update of specific crewmate"
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific crewmate",
+        description="Admin can delete specific crewmate"
+    )
+)
 class CrewViewSet(ModelViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
 
 
+@extend_schema_view(
+    create=extend_schema(
+        summary="Create an airport",
+        description="Admin can create an airport"
+    ),
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific airport",
+        description="User can get a detailed info about specific airport"
+    ),
+    update=extend_schema(
+        summary="Update info about specific airport",
+        description="Admin can update information about specific airport"
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific airport",
+        description="Admin can make a partial update of specific airport"
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific airport",
+        description="Admin can delete specific airport"
+    )
+)
 class AirportViewSet(ModelViewSet):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
     permission_classes = [IsAdminAllORIsAuthenticatedOrReadOnly]
+
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of airports",
+        description="User can get a list of airports",
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description="Filter by airport name",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Paris"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="closest_city",
+                description="Filter airport by closest big city",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Brussels"
+                    )
+                ]
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = self.queryset
