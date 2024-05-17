@@ -131,7 +131,7 @@ class Flight(models.Model):
 
     def update_flying_hours(self):
         if self.flight_is_over:
-            hours_flight_time = (self.arrival_time - self.arrival_time).total_seconds() / 3600
+            hours_flight_time = (self.arrival_time - self.departure_time).total_seconds() / 3600
             for crew in self.crews.all():
                 crew.flying_hours += hours_flight_time
                 crew.save()

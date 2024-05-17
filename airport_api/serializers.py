@@ -282,7 +282,8 @@ class FlightRetrieveSerializer(FlightListSerializer):
             "flight_time",
             "distance",
             "taken_seats",
-            "tickets_available"
+            "tickets_available",
+            "flight_is_over"
         ]
 
 
