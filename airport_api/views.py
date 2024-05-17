@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from django.db.models import Count, F, Q
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
     extend_schema,
     OpenApiParameter,
@@ -446,6 +449,12 @@ class FlightViewSet(ModelViewSet):
         source = self.request.query_params.get("from")
         destination = self.request.query_params.get("to")
         airplane = self.request.query_params.get("plane_name")
+        departure_date = self.request.query_params.get("departure_date")
+        arrival_date = self.request.query_params.get("arrival_date")
+        departure_hour = self.request.query_params.get("departure_hour")
+        departure_minute = self.request.query_params.get("departure_minute")
+        arrival_hour = self.request.query_params.get("arrival_hour")
+        arrival_minute = self.request.query_params.get("arrival_minute")
         if flight_id:
             queryset = self.queryset.filter(
                 id__in=flight_id
@@ -462,6 +471,20 @@ class FlightViewSet(ModelViewSet):
             queryset = self.queryset.filter(
                 airplane__name__icontains=airplane
             )
+        if departure_date:
+            date = datetime.strptime(departure_date, "%Y-%m-%d").date()
+            queryset = queryset.filter(departure_time__date=date)
+        if departure_hour:
+            queryset = queryset.filter(departure_time__hour=departure_hour)
+        if departure_minute:
+            queryset = queryset.filter(departure_time__minute=departure_minute)
+        if arrival_date:
+            date = datetime.strptime(arrival_date, "%Y-%m-%d").date()
+            queryset = queryset.filter(arrival_time__date=date)
+        if arrival_hour:
+            queryset = queryset.filter(arrival_time__hour=arrival_hour)
+        if arrival_minute:
+            queryset = queryset.filter(arrival_time__minute=arrival_minute)
         if self.action in ("list", "retrieve"):
             return queryset.select_related(
             ).prefetch_related("crews").annotate(
@@ -507,6 +530,18 @@ class FlightViewSet(ModelViewSet):
                 ]
             ),
             OpenApiParameter(
+                name="airplane",
+                description="Filter by airplane name",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Airbus"
+                    )
+                ]
+            ),
+
+            OpenApiParameter(
                 name="source",
                 description="Filter by departure airport",
                 type=str,
@@ -519,7 +554,7 @@ class FlightViewSet(ModelViewSet):
             ),
             OpenApiParameter(
                 name="destination",
-                description="Filter by destination airport",
+                description="Filter by arrival airport",
                 type=str,
                 examples=[
                     OpenApiExample(
@@ -528,14 +563,70 @@ class FlightViewSet(ModelViewSet):
                     )
                 ]
             ),
+
             OpenApiParameter(
-                name="airplane",
-                description="Filter by airplane name",
-                type=str,
+                name="departure_time",
+                description="Filter by airplane departure time",
+                type=OpenApiTypes.DATETIME,
                 examples=[
                     OpenApiExample(
                         "Example",
-                        value="Airbus"
+                        value="2024-05-21"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="departure_hour",
+                description="Filter by airplane departure hour",
+                type=OpenApiTypes.TIME,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="08"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="departure_minute",
+                description="Filter by airplane departure minute",
+                type=OpenApiTypes.TIME,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="30"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="arrival_time",
+                description="Filter by airplane arrival time",
+                type=OpenApiTypes.DATETIME,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="2024-05-21"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="arrival_hour",
+                description="Filter by airplane arrival hour",
+                type=OpenApiTypes.DATETIME,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="10"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="arrival_minute",
+                description="Filter by airplane arrival minute",
+                type=OpenApiTypes.DATETIME,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="00"
                     )
                 ]
             ),
@@ -655,7 +746,7 @@ class TicketViewSet(ModelViewSet):
         if ticket_id:
             if "-" in ticket_id:
                 start_id, end_id = map(int, ticket_id.split("-"))
-                queryset = queryset.filter(id__range=(start_id,end_id))
+                queryset = queryset.filter(id__range=(start_id, end_id))
             else:
                 queryset = self.queryset.filter(
                     id__in=ticket_id
@@ -688,12 +779,12 @@ class TicketViewSet(ModelViewSet):
                 type=int,
                 examples=[
                     OpenApiExample(
-                        "Example1",
+                        "Example 1",
                         value=1
                     ),
                     OpenApiExample(
-                        "Example2",
-                        value=1-15
+                        "Example 2",
+                        value=1 - 15
                     )
                 ]
             ),
