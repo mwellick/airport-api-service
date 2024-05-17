@@ -6,6 +6,7 @@ from drf_spectacular.utils import (
     extend_schema_view
 )
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -195,6 +196,28 @@ class AirportViewSet(ModelViewSet):
         return queryset
 
 
+@extend_schema_view(
+    create=extend_schema(
+        summary="Create a flight route",
+        description="Admin can create a flight route"
+    ),
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific route",
+        description="User can get a detailed info about specific route"
+    ),
+    update=extend_schema(
+        summary="Update info about specific route",
+        description="Admin can update information about specific route"
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific route",
+        description="Admin can make a partial update of specific route"
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific route",
+        description="Admin can delete specific route"
+    )
+)
 class RouteViewSet(ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
@@ -222,7 +245,61 @@ class RouteViewSet(ModelViewSet):
             return RouteRetrieveSerializer
         return RouteListSerializer
 
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of routes",
+        description="User can get a list of all routes",
+        parameters=[
+            OpenApiParameter(
+                name="source",
+                description="Filter by departure airport",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Paris"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="destination",
+                description="Filter by arrival airport",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="London"
+                    )
+                ]
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
+
+@extend_schema_view(
+    create=extend_schema(
+        summary="Create an airplane type",
+        description="Admin can create an airplane type"
+    ),
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific type of airplane",
+        description="User can get a detailed info about specific type of airplane"
+    ),
+    update=extend_schema(
+        summary="Update info about specific airplane type",
+        description="Admin can update information about specific airplane type"
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific airplane type",
+        description="Admin can make a partial update of specific airplane type"
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific airplane type",
+        description="Admin can delete specific airplane type"
+    )
+)
 class AirplaneTypeViewSet(ModelViewSet):
     queryset = AirplaneType.objects.all()
     serializer_class = AirplaneTypeSerializer
@@ -236,7 +313,50 @@ class AirplaneTypeViewSet(ModelViewSet):
             )
         return queryset
 
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of all airplane types",
+        description="User can get a list of all airplane types",
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description="Filter by airplane type name",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Commercial"
+                    )
+                ]
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
+
+@extend_schema_view(
+    create=extend_schema(
+        summary="Create an airplane model",
+        description="Admin can create an airplane model"
+    ),
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific airplane",
+        description="User can get a detailed info about specific airplane"
+    ),
+    update=extend_schema(
+        summary="Update info about specific airplane",
+        description="Admin can update information about specific airplane"
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific airplane",
+        description="Admin can make a partial update of specific airplane"
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific airplane",
+        description="Admin can delete specific airplane"
+    )
+)
 class AirplaneViewSet(ModelViewSet):
     queryset = Airplane.objects.all()
     serializer_class = AirplaneSerializer
@@ -259,6 +379,27 @@ class AirplaneViewSet(ModelViewSet):
             return AirplaneListSerializer
         return AirplaneSerializer
 
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of all airplanes ",
+        description="User can get a list of all airplanes",
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description="Filter by airplane name",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Airbus"
+                    )
+                ]
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     @action(
         methods=["POST"],
         detail=True,
@@ -273,6 +414,28 @@ class AirplaneViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@extend_schema_view(
+    create=extend_schema(
+        summary="Create a flight",
+        description="Admin can create a flight"
+    ),
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific flight",
+        description="User can get a detailed info about specific flight"
+    ),
+    update=extend_schema(
+        summary="Update info about specific flight",
+        description="Admin can update information about specific flight"
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific flight",
+        description="Admin can make a partial update of specific flight"
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific flight",
+        description="Admin can delete specific flight"
+    )
+)
 class FlightViewSet(ModelViewSet):
     queryset = Flight.objects.all()
     serializer_class = FlightSerializer
@@ -327,17 +490,98 @@ class FlightViewSet(ModelViewSet):
         instance = serializer.save()
         instance.update_flying_hours()
 
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of all flights",
+        description="User can get a list of all flights",
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                description="Filter by flight id",
+                type=int,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value=1
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="source",
+                description="Filter by departure airport",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="London"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="destination",
+                description="Filter by destination airport",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Paris"
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="airplane",
+                description="Filter by airplane name",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Airbus"
+                    )
+                ]
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
+
+@extend_schema_view(
+    create=extend_schema(
+        summary="Create an order",
+        description="Authorized user can create an order"
+    ),
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific order",
+        description="User can get a detailed info about his order"
+    ),
+    update=extend_schema(
+        summary="Update info about specific order",
+        description="Admin can update information about specific order or user can if it's user's own order"
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific order",
+        description="Admin can make a partial update of specific order or user can if it's user's own order"
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific order",
+        description="Admin can delete specific order or user can if it's user's own order"
+    )
+)
 class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
 
     @staticmethod
     def params_to_ints(query_str):
         return [int(str_id) for str_id in query_str.split(",")]
 
     def get_queryset(self):
+        user = self.request.user
         queryset = self.queryset
+        if not user.is_staff:
+            queryset = self.queryset.filter(user=user)
+
         ticket_ids = self.request.query_params.get("ticket_id")
         if ticket_ids:
             ticket_ids = self.params_to_ints(ticket_ids)
@@ -356,19 +600,67 @@ class OrderViewSet(ModelViewSet):
             return OrderRetrieveSerializer
         return OrderSerializer
 
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of all orders ",
+        description="User can get a list of orders or admin can get access to all users orders.",
+        parameters=[
+            OpenApiParameter(
+                name="ticket_id",
+                description="Filter by ticket ids",
+                type=int,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value=1
+                    )
+                ]
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
+
+@extend_schema_view(
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific ticket",
+        description="Admin can get a detailed info about specific ticket or user can if it's user's ticket"
+    ),
+    update=extend_schema(
+        summary="Update info about specific ticket",
+        description="Admin can update information about specific ticket or user can if it's user's ticket"
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific ticket",
+        description="Admin can make a partial update of specific ticket or user can if it's user's ticket"
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific flight",
+        description="Admin can delete specific ticket or user can if it's user's own ticket"
+    )
+)
 class TicketViewSet(ModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        user = self.request.user
         queryset = self.queryset
+        if not user.is_staff:
+            queryset = self.queryset.filter(order__user=user)
         ticket_id = self.request.query_params.get("id")
         flight_info = self.request.query_params.get("route")
         if ticket_id:
-            queryset = self.queryset.filter(
-                id__in=ticket_id
-            )
+            if "-" in ticket_id:
+                start_id, end_id = map(int, ticket_id.split("-"))
+                queryset = queryset.filter(id__range=(start_id,end_id))
+            else:
+                queryset = self.queryset.filter(
+                    id__in=ticket_id
+                )
+
         if flight_info:
             queryset = self.queryset.filter(
                 Q(flight__route__source__name__icontains=flight_info) |
@@ -384,3 +676,39 @@ class TicketViewSet(ModelViewSet):
         elif self.action == "retrieve":
             return TicketRetrieveSerializer
         return TicketSerializer
+
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of all tickets",
+        description="Admin can get a list of all tickets",
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                description="Filter ticket by ids",
+                type=int,
+                examples=[
+                    OpenApiExample(
+                        "Example1",
+                        value=1
+                    ),
+                    OpenApiExample(
+                        "Example2",
+                        value=1-15
+                    )
+                ]
+            ),
+            OpenApiParameter(
+                name="route",
+                description="Filter tickets by flight info",
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        value="Paris"
+                    )
+                ]
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

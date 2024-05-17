@@ -52,7 +52,7 @@ class Route(models.Model):
 
     @property
     def km_to_miles(self) -> float:
-        return self.distance * 1.6
+        return self.distance / 1.6
 
     @property
     def distance_km(self) -> str:
