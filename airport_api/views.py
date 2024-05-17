@@ -1,5 +1,10 @@
 from django.db.models import Count, F, Q
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+    OpenApiExample,
+    extend_schema_view
+)
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -69,6 +74,16 @@ from .serializers import (
 class CrewViewSet(ModelViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        first_name = self.request.query_params.get("first_name")
+        last_name = self.request.query_params.get("last_name")
+        if first_name:
+            queryset = queryset.filter(first_name__icontains=first_name)
+        if last_name:
+            queryset = queryset.filter(last_name__icontains=last_name)
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
