@@ -22,6 +22,15 @@ class CrewSerializer(serializers.ModelSerializer):
         ]
 
 
+class CrewRetrieveSerializer(CrewSerializer):
+    class Meta:
+        model = Crew
+        fields = [
+            "full_name",
+            "flying_hours"
+        ]
+
+
 class AirportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airport

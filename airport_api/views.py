@@ -36,6 +36,7 @@ from .serializers import (
     AirplaneImageSerializer,
     AirplaneRetrieveSerializer,
     AirplaneListSerializer,
+    CrewRetrieveSerializer,
 )
 
 
@@ -68,6 +69,13 @@ from .serializers import (
 class CrewViewSet(ModelViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CrewSerializer
+        elif self.action == "retrieve":
+            return CrewRetrieveSerializer
+        return CrewSerializer
 
 
 @extend_schema_view(
@@ -263,6 +271,14 @@ class FlightViewSet(ModelViewSet):
         elif self.action == "retrieve":
             return FlightRetrieveSerializer
         return FlightSerializer
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        instance.update_flying_hours()
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        instance.update_flying_hours()
 
 
 class OrderViewSet(ModelViewSet):
