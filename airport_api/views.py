@@ -775,7 +775,7 @@ class TicketViewSet(ModelViewSet):
         parameters=[
             OpenApiParameter(
                 name="id",
-                description="Filter ticket by ids",
+                description="Filter ticket by id or range of ids",
                 type=int,
                 examples=[
                     OpenApiExample(
