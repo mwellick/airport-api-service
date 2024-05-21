@@ -119,6 +119,7 @@ class Flight(models.Model):
     )
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
+    accounted = models.BooleanField(default=False)
 
     @property
     def flight_time(self) -> str:
@@ -128,13 +129,6 @@ class Flight(models.Model):
     def flight_is_over(self) -> bool:
         now = timezone.now()
         return now >= self.arrival_time
-
-    def update_flying_hours(self):
-        if self.flight_is_over:
-            hours_flight_time = (self.arrival_time - self.departure_time).total_seconds() / 3600
-            for crew in self.crews.all():
-                crew.flying_hours += hours_flight_time
-                crew.save()
 
     def __str__(self):
         return (
