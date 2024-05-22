@@ -51,28 +51,28 @@ from .serializers import (
 
 @extend_schema_view(
     list=extend_schema(
-        summary="Get list of all crew mates",
-        description="User can get a list of all crewmates"
+        summary="Get list of all crew members",
+        description="User can get a list of all crew members"
     ),
     create=extend_schema(
-        summary="Create a crew mate",
-        description="Admin can create a new crewmate"
+        summary="Create a crew member",
+        description="Admin can create a new crew member"
     ),
     retrieve=extend_schema(
-        summary="Get a detailed info about specific crewmate",
-        description="User can get specific info about crewmate"
+        summary="Get a detailed info about specific crew member",
+        description="User can get specific info about crew member"
     ),
     update=extend_schema(
-        summary="Update specific info about crewmate",
-        description="Admin can update information about specific crewmate"
+        summary="Update specific info about crew member",
+        description="Admin can update information about specific crew member"
     ),
     partial_update=extend_schema(
-        summary="Partial update of specific crewmate",
-        description="Admin can make a partial update of specific crewmate"
+        summary="Partial update of specific crew member",
+        description="Admin can make a partial update of specific crew member"
     ),
     destroy=extend_schema(
-        summary="Delete a specific crewmate",
-        description="Admin can delete specific crewmate"
+        summary="Delete a specific crew member",
+        description="Admin can delete specific crew member"
     )
 )
 class CrewViewSet(ModelViewSet):
@@ -98,12 +98,12 @@ class CrewViewSet(ModelViewSet):
 
     @extend_schema(
         methods=["GET"],
-        summary="Get list of all crewmates",
-        description="User can get a list of all crewmates",
+        summary="Get list of all crew members",
+        description="User can get a list of all crew members",
         parameters=[
             OpenApiParameter(
                 name="first_name",
-                description="Filter crewmates by their first name",
+                description="Filter crew members by their first name",
                 type=str,
                 examples=[
                     OpenApiExample(
@@ -114,7 +114,7 @@ class CrewViewSet(ModelViewSet):
             ),
             OpenApiParameter(
                 name="last_name",
-                description="Filter crewmates by their last name",
+                description="Filter crew members by their last name",
                 type=str,
                 examples=[
                     OpenApiExample(
@@ -504,14 +504,6 @@ class FlightViewSet(ModelViewSet):
         elif self.action == "retrieve":
             return FlightRetrieveSerializer
         return FlightSerializer
-
-    def perform_create(self, serializer):
-        instance = serializer.save()
-        instance.update_flying_hours()
-
-    def perform_update(self, serializer):
-        instance = serializer.save()
-        instance.update_flying_hours()
 
     @extend_schema(
         methods=["GET"],
