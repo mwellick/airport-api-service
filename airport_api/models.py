@@ -2,9 +2,7 @@ import pathlib
 import uuid
 from datetime import datetime
 from typing import Type
-
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -137,31 +135,8 @@ class Flight(models.Model):
         ).exists()
         if overlapping_flight:
             raise error_to_raise(
-                "One or more crew members are already assigned to another flight during this time."
+                "One or more crew members are already assigned to another flight during this time"
             )
-
-    def clean(self):
-        Flight.validate_unique_crew_for_flight(
-            self.crews,
-            self.departure_time,
-            self.arrival_time,
-            ValidationError
-        )
-
-    def save(
-            self,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-    ):
-        self.full_clean()
-        super(Flight, self).save(
-            force_insert,
-            force_update,
-            using,
-            update_fields
-        )
 
     @property
     def flight_time(self) -> str:

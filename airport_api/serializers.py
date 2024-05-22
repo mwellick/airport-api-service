@@ -148,6 +148,18 @@ class FlightSerializer(serializers.ModelSerializer):
             "arrival_time"
         ]
 
+    def create(self, validated_data):
+        crews = validated_data.pop('crews', [])
+        flight = Flight.objects.create(**validated_data)
+        flight.crews.set(crews)
+        return flight
+
+    def update(self, instance, validated_data):
+        crews = validated_data.pop('crews', [])
+        instance = super().update(instance, validated_data)
+        instance.crews.set(crews)
+        return instance
+
     def validate(self, attrs):
         crews = attrs.get("crews", [])
         crew_ids = [crew.id for crew in crews]
@@ -310,6 +322,8 @@ class FlightRetrieveSerializer(FlightListSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
+
     class Meta:
         model = Order
         fields = [
