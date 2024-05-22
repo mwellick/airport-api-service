@@ -142,8 +142,30 @@ class FlightSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "route",
+            "crews",
             "airplane",
+            "departure_time",
+            "arrival_time"
         ]
+
+    def validate(self, attrs):
+        crews = attrs.get("crews", [])
+        crew_ids = [crew.id for crew in crews]
+        Flight.validate_unique_crew_for_flight(
+            crew_ids,
+            attrs["departure_time"],
+            attrs["arrival_time"],
+            serializers.ValidationError
+        )
+        if Flight.objects.filter(
+                crews__in=crew_ids,
+                departure_time=attrs["departure_time"],
+                arrival_time=attrs["arrival_time"]
+        ).exists():
+            raise serializers.ValidationError(
+                {"detail": "One or more crew members are already assigned to another flight during this time."}
+            )
+        return attrs
 
 
 class FlightListSerializer(serializers.ModelSerializer):
