@@ -55,7 +55,7 @@ class Route(models.Model):
         return self.distance / 1.6
 
     @property
-    def distance_km(self) -> str:
+    def distance_in_km_and_miles(self) -> str:
         return f"{self.distance} km / {self.km_to_miles} miles"
 
     def __str__(self):

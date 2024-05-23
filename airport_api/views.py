@@ -27,25 +27,31 @@ from .models import (
 from .permissions import IsAdminAllORIsAuthenticatedOrReadOnly
 from .serializers import (
     CrewSerializer,
+    CrewListSerializer,
+    CrewRetrieveSerializer,
     AirportSerializer,
+    AirportListSerializer,
+    AirportRetrieveSerializer,
     RouteSerializer,
-    AirplaneTypeSerializer,
-    AirplaneSerializer,
-    FlightSerializer,
-    OrderSerializer,
-    TicketSerializer,
-    FlightListSerializer,
     RouteListSerializer,
-    FlightRetrieveSerializer,
     RouteRetrieveSerializer,
-    TicketListSerializer,
-    TicketRetrieveSerializer,
-    OrderRetrieveSerializer,
-    OrderListSerializer,
+    AirplaneTypeSerializer,
+    AirplaneTypeListSerializer,
+    AirplaneTypeRetrieveSerializer,
+    AirplaneSerializer,
+    AirplaneListSerializer,
     AirplaneImageSerializer,
     AirplaneRetrieveSerializer,
-    AirplaneListSerializer,
-    CrewRetrieveSerializer,
+    FlightSerializer,
+    FlightListSerializer,
+    FlightRetrieveSerializer,
+    TicketSerializer,
+    TicketListSerializer,
+    TicketRetrieveSerializer,
+    OrderSerializer,
+    OrderListSerializer,
+    OrderRetrieveSerializer,
+
 )
 
 
@@ -91,7 +97,7 @@ class CrewViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "list":
-            return CrewSerializer
+            return CrewListSerializer
         elif self.action == "retrieve":
             return CrewRetrieveSerializer
         return CrewSerializer
@@ -188,6 +194,13 @@ class AirportViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+    def get_serializer_class(self):
+        if self.action == "list":
+            return AirportListSerializer
+        elif self.action == "retrieve":
+            return AirportRetrieveSerializer
+        return AirportSerializer
+
     def get_queryset(self):
         queryset = self.queryset
         name = self.request.query_params.get("name")
@@ -243,10 +256,10 @@ class RouteViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "list":
-            return RouteSerializer
+            return RouteListSerializer
         elif self.action == "retrieve":
             return RouteRetrieveSerializer
-        return RouteListSerializer
+        return RouteSerializer
 
     @extend_schema(
         methods=["GET"],
@@ -315,6 +328,11 @@ class AirplaneTypeViewSet(ModelViewSet):
                 name__icontains=name
             )
         return queryset
+
+    def get_serializer_class(self):
+        if self.action in ("list", "create"):
+            return AirplaneTypeListSerializer
+        return AirplaneTypeRetrieveSerializer
 
     @extend_schema(
         methods=["GET"],
