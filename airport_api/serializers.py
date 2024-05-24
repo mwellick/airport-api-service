@@ -210,20 +210,15 @@ class FlightSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         crews = attrs.get("crews", [])
         crew_ids = [crew.id for crew in crews]
-        Flight.validate_unique_crew_for_flight(
-            crew_ids,
-            attrs["departure_time"],
-            attrs["arrival_time"],
-            serializers.ValidationError
-        )
-        if Flight.objects.filter(
-                crews__in=crew_ids,
-                departure_time=attrs["departure_time"],
-                arrival_time=attrs["arrival_time"]
-        ).exists():
+        if Flight.has_overlapping_crew(
+                crew_ids,
+                attrs["departure_time"],
+                attrs["arrival_time"]
+        ):
             raise serializers.ValidationError(
                 {"detail": "One or more crew members are already assigned to another flight during this time."}
             )
+
         return attrs
 
 
@@ -282,6 +277,12 @@ class TicketSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
+        flight = attrs.get("flight")
+        if flight and flight.flight_is_over:
+            raise serializers.ValidationError(
+                {"detail": "Unavailable to sell tickets for a flight that has already completed"}
+            )
+
         Ticket.validate_seat_and_rows(
             attrs["seat"],
             attrs["flight"].airplane.seats_in_row,

@@ -122,21 +122,16 @@ class Flight(models.Model):
     accounted = models.BooleanField(default=False)
 
     @staticmethod
-    def validate_unique_crew_for_flight(
-            crew: list[Crew],
+    def has_overlapping_crew(
+            crew_ids: list[int],
             departure_time: datetime,
-            arrival_time: datetime,
-            error_to_raise: Type[Exception]
-    ):
-        overlapping_flight = Flight.objects.filter(
-            crews__in=crew,
+            arrival_time: datetime
+    ) -> bool:
+        return Flight.objects.filter(
+            crews__id__in=crew_ids,
             departure_time__lt=arrival_time,
             arrival_time__gt=departure_time
         ).exists()
-        if overlapping_flight:
-            raise error_to_raise(
-                "One or more crew members are already assigned to another flight during this time"
-            )
 
     @property
     def flight_time(self) -> str:
