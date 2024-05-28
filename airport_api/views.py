@@ -177,17 +177,6 @@ class AirportViewSet(ModelViewSet):
                         value="Paris"
                     )
                 ]
-            ),
-            OpenApiParameter(
-                name="closest_city",
-                description="Filter airport by closest big city",
-                type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Brussels"
-                    )
-                ]
             )
         ]
     )
@@ -204,11 +193,8 @@ class AirportViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         name = self.request.query_params.get("name")
-        city = self.request.query_params.get("closest_city")
         if name:
             queryset = queryset.filter(name__icontains=name)
-        if city:
-            queryset = queryset.filter(closest_big_city__icontains=city)
         return queryset
 
 
