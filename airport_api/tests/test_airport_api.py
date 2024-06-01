@@ -47,7 +47,6 @@ class AuthenticatedAirportApiTests(TestCase):
         airports = Airport.objects.all()
         serializer = AirportListSerializer(airports, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        print(res.data)
         self.assertEqual(res.data["results"], serializer.data)
 
     def test_filter_airport_by_name(self):
@@ -58,7 +57,7 @@ class AuthenticatedAirportApiTests(TestCase):
         self.assertIn(serializer1.data, res.data["results"])
         self.assertNotIn(serializer2.data, res.data["results"])
 
-    def test_retrieve_movie_detail(self):
+    def test_retrieve_airport_detail(self):
         res = self.client.get(detail_url(self.airport_1.id))
         serializer = AirportRetrieveSerializer(self.airport_1)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -77,7 +76,7 @@ class AuthenticatedAirportApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_airport_forbidden(self):
-        res = self.client.delete(detail_url(self.airport_1))
+        res = self.client.delete(detail_url(self.airport_1.id))
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
@@ -106,6 +105,7 @@ class AdminAirportTests(TestCase):
 
         airport = Airport.objects.get(id=res.data["id"])
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Airport.objects.count(), 2)
 
         for key in payload:
             self.assertEqual(payload[key], getattr(airport, key))
