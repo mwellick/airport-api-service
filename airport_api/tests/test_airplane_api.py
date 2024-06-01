@@ -13,7 +13,7 @@ def detail_url(airplane_id):
     return reverse("api_airport:airplane-detail", args=[airplane_id])
 
 
-class UnauthenticatedRouteApiTests(TestCase):
+class UnauthenticatedAirplaneApiTests(TestCase):
 
     def setUp(self) -> None:
         self.client = APIClient()
