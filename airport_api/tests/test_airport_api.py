@@ -118,7 +118,7 @@ class AdminAirportTests(TestCase):
         res = self.client.put(detail_url(self.airport_1.id), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-        airport = Airport.objects.get(id=res.data["id"])
+        airport = Airport.objects.get(id=self.airport_1.id)
         for key in payload:
             self.assertEqual(payload[key], getattr(airport, key))
 
