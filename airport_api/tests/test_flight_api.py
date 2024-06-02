@@ -7,6 +7,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from airport_api.models import Route, Airport, Airplane, Crew, Flight, AirplaneType
 from airport_api.serializers import FlightListSerializer, FlightRetrieveSerializer
+from airport_api.tasks import update_flying_hours
 
 FLIGHT_URL = reverse("api_airport:flight-list")
 
@@ -328,7 +329,6 @@ class AdminFlightTests(TestCase):
 
         }
         res = self.client.post(FLIGHT_URL, payload)
-        print(res.data)
         flight = Flight.objects.get(id=res.data["id"])
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Flight.objects.count(), 3)

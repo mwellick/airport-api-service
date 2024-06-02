@@ -345,6 +345,17 @@ class OrderSerializer(serializers.ModelSerializer):
             Ticket.objects.create(order=order, **ticket_data)
         return order
 
+    def update(self, instance, validated_data):
+        tickets_data = validated_data.pop("tickets")
+        instance = super().update(instance, validated_data)
+
+        instance.tickets.all().delete()
+        for ticket_data in tickets_data:
+            ticket_data.pop("order", None)
+            Ticket.objects.create(order=instance, **ticket_data)
+
+        return instance
+
 
 class OrderListSerializer(serializers.ModelSerializer):
     tickets = TicketListSerializer(read_only=True, many=True)

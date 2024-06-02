@@ -17,4 +17,3 @@ def update_flying_hours() -> None:
                 crew.save()
             flight.accounted = True
             flight.save()
-
