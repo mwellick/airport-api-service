@@ -42,7 +42,7 @@ class AuthenticatedAirplaneApiTests(TestCase):
 
         self.airplane_1 = Airplane.objects.create(
             name="Airplane Name 1",
-            rows=200,
+            rows=55,
             seats_in_row=10,
             airplane_type=self.airplanetype_1
 
