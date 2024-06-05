@@ -28,30 +28,24 @@ class AuthenticatedAirplaneApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1"
+            email="Test@test.test", password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
 
-        self.airplanetype_1 = AirplaneType.objects.create(
-            name="Airplane Type 1"
-        )
-        self.airplanetype_2 = AirplaneType.objects.create(
-            name="Airplane Type 2"
-        )
+        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
+        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
 
         self.airplane_1 = Airplane.objects.create(
             name="Airplane Name 1",
             rows=55,
             seats_in_row=10,
-            airplane_type=self.airplanetype_1
-
+            airplane_type=self.airplanetype_1,
         )
         self.airplane_2 = Airplane.objects.create(
             name="Airplane Name 2",
             rows=80,
             seats_in_row=10,
-            airplane_type=self.airplanetype_2
+            airplane_type=self.airplanetype_2,
         )
 
     def test_airplane_list(self):
@@ -80,7 +74,7 @@ class AuthenticatedAirplaneApiTests(TestCase):
             "name": "Name 3",
             "rows": 100,
             "seats_in_row": 10,
-            "airplane_type": self.airplanetype_2
+            "airplane_type": self.airplanetype_2,
         }
         res = self.client.post(AIRPLANE_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
@@ -99,31 +93,24 @@ class AdminAirplaneTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1",
-            is_staff=True
+            email="Test@test.test", password="Testpsw1", is_staff=True
         )
         self.client.force_authenticate(self.user)
 
-        self.airplanetype_1 = AirplaneType.objects.create(
-            name="Airplane Type 1"
-        )
-        self.airplanetype_2 = AirplaneType.objects.create(
-            name="Airplane Type 2"
-        )
+        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
+        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
 
         self.airplane_1 = Airplane.objects.create(
             name="Airplane Name 1",
             rows=200,
             seats_in_row=10,
-            airplane_type=self.airplanetype_1
-
+            airplane_type=self.airplanetype_1,
         )
         self.airplane_2 = Airplane.objects.create(
             name="Airplane Name 2",
             rows=80,
             seats_in_row=10,
-            airplane_type=self.airplanetype_2
+            airplane_type=self.airplanetype_2,
         )
 
     def test_create_airplane(self):
@@ -131,7 +118,7 @@ class AdminAirplaneTests(TestCase):
             "name": "Name 3",
             "rows": 100,
             "seats_in_row": 10,
-            "airplane_type": self.airplanetype_2.id
+            "airplane_type": self.airplanetype_2.id,
         }
         res = self.client.post(AIRPLANE_URL, payload)
 
@@ -151,7 +138,7 @@ class AdminAirplaneTests(TestCase):
             "name": "Name 3",
             "rows": 100,
             "seats_in_row": 10,
-            "airplane_type": self.airplanetype_2.id
+            "airplane_type": self.airplanetype_2.id,
         }
         res = self.client.put(detail_url(self.airplane_1.id), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)

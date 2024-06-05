@@ -6,20 +6,20 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('airport_api', '0002_initial'),
+        ("airport_api", "0002_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='airplane',
-            options={'ordering': ['name']},
+            name="airplane",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='airplanetype',
-            options={'ordering': ['name']},
+            name="airplanetype",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='airport',
-            options={'ordering': ['name']},
+            name="airport",
+            options={"ordering": ["name"]},
         ),
     ]

@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class AirportApiConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'airport_api'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "airport_api"

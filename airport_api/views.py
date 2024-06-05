@@ -6,7 +6,7 @@ from drf_spectacular.utils import (
     extend_schema,
     OpenApiParameter,
     OpenApiExample,
-    extend_schema_view
+    extend_schema_view,
 )
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -51,35 +51,33 @@ from .serializers import (
     OrderSerializer,
     OrderListSerializer,
     OrderRetrieveSerializer,
-
 )
 
 
 @extend_schema_view(
     list=extend_schema(
         summary="Get list of all crew members",
-        description="User can get a list of all crew members"
+        description="User can get a list of all crew members",
     ),
     create=extend_schema(
-        summary="Create a crew member",
-        description="Admin can create a new crew member"
+        summary="Create a crew member", description="Admin can create a new crew member"
     ),
     retrieve=extend_schema(
         summary="Get a detailed info about specific crew member",
-        description="User can get specific info about crew member"
+        description="User can get specific info about crew member",
     ),
     update=extend_schema(
         summary="Update specific info about crew member",
-        description="Admin can update information about specific crew member"
+        description="Admin can update information about specific crew member",
     ),
     partial_update=extend_schema(
         summary="Partial update of specific crew member",
-        description="Admin can make a partial update of specific crew member"
+        description="Admin can make a partial update of specific crew member",
     ),
     destroy=extend_schema(
         summary="Delete a specific crew member",
-        description="Admin can delete specific crew member"
-    )
+        description="Admin can delete specific crew member",
+    ),
 )
 class CrewViewSet(ModelViewSet):
     queryset = Crew.objects.all()
@@ -111,25 +109,15 @@ class CrewViewSet(ModelViewSet):
                 name="first_name",
                 description="Filter crew members by their first name",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Michael"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="Michael")],
             ),
             OpenApiParameter(
                 name="last_name",
                 description="Filter crew members by their last name",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Ellipsis"
-                    )
-                ]
-            )
-        ]
+                examples=[OpenApiExample("Example", value="Ellipsis")],
+            ),
+        ],
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -137,25 +125,24 @@ class CrewViewSet(ModelViewSet):
 
 @extend_schema_view(
     create=extend_schema(
-        summary="Create an airport",
-        description="Admin can create an airport"
+        summary="Create an airport", description="Admin can create an airport"
     ),
     retrieve=extend_schema(
         summary="Get a detailed info about specific airport",
-        description="User can get a detailed info about specific airport"
+        description="User can get a detailed info about specific airport",
     ),
     update=extend_schema(
         summary="Update info about specific airport",
-        description="Admin can update information about specific airport"
+        description="Admin can update information about specific airport",
     ),
     partial_update=extend_schema(
         summary="Partial update of specific airport",
-        description="Admin can make a partial update of specific airport"
+        description="Admin can make a partial update of specific airport",
     ),
     destroy=extend_schema(
         summary="Delete a specific airport",
-        description="Admin can delete specific airport"
-    )
+        description="Admin can delete specific airport",
+    ),
 )
 class AirportViewSet(ModelViewSet):
     queryset = Airport.objects.all()
@@ -171,14 +158,9 @@ class AirportViewSet(ModelViewSet):
                 name="name",
                 description="Filter by airport name",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Paris"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="Paris")],
             )
-        ]
+        ],
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -200,25 +182,23 @@ class AirportViewSet(ModelViewSet):
 
 @extend_schema_view(
     create=extend_schema(
-        summary="Create a flight route",
-        description="Admin can create a flight route"
+        summary="Create a flight route", description="Admin can create a flight route"
     ),
     retrieve=extend_schema(
         summary="Get a detailed info about specific route",
-        description="User can get a detailed info about specific route"
+        description="User can get a detailed info about specific route",
     ),
     update=extend_schema(
         summary="Update info about specific route",
-        description="Admin can update information about specific route"
+        description="Admin can update information about specific route",
     ),
     partial_update=extend_schema(
         summary="Partial update of specific route",
-        description="Admin can make a partial update of specific route"
+        description="Admin can make a partial update of specific route",
     ),
     destroy=extend_schema(
-        summary="Delete a specific route",
-        description="Admin can delete specific route"
-    )
+        summary="Delete a specific route", description="Admin can delete specific route"
+    ),
 )
 class RouteViewSet(ModelViewSet):
     queryset = Route.objects.all()
@@ -229,13 +209,9 @@ class RouteViewSet(ModelViewSet):
         source = self.request.query_params.get("from")
         destination = self.request.query_params.get("to")
         if source:
-            queryset = queryset.filter(
-                source__name__icontains=source
-            )
+            queryset = queryset.filter(source__name__icontains=source)
         if destination:
-            queryset = queryset.filter(
-                destination__name__icontains=destination
-            )
+            queryset = queryset.filter(destination__name__icontains=destination)
         if self.action in ("list", "retrieve"):
             return queryset.select_related()
         return queryset
@@ -256,25 +232,15 @@ class RouteViewSet(ModelViewSet):
                 name="source",
                 description="Filter by departure airport",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Paris"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="Paris")],
             ),
             OpenApiParameter(
                 name="destination",
                 description="Filter by arrival airport",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="London"
-                    )
-                ]
-            )
-        ]
+                examples=[OpenApiExample("Example", value="London")],
+            ),
+        ],
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -283,24 +249,24 @@ class RouteViewSet(ModelViewSet):
 @extend_schema_view(
     create=extend_schema(
         summary="Create an airplane type",
-        description="Admin can create an airplane type"
+        description="Admin can create an airplane type",
     ),
     retrieve=extend_schema(
         summary="Get a detailed info about specific type of airplane",
-        description="User can get a detailed info about specific type of airplane"
+        description="User can get a detailed info about specific type of airplane",
     ),
     update=extend_schema(
         summary="Update info about specific airplane type",
-        description="Admin can update information about specific airplane type"
+        description="Admin can update information about specific airplane type",
     ),
     partial_update=extend_schema(
         summary="Partial update of specific airplane type",
-        description="Admin can make a partial update of specific airplane type"
+        description="Admin can make a partial update of specific airplane type",
     ),
     destroy=extend_schema(
         summary="Delete a specific airplane type",
-        description="Admin can delete specific airplane type"
-    )
+        description="Admin can delete specific airplane type",
+    ),
 )
 class AirplaneTypeViewSet(ModelViewSet):
     queryset = AirplaneType.objects.all()
@@ -310,9 +276,7 @@ class AirplaneTypeViewSet(ModelViewSet):
         queryset = self.queryset
         name = self.request.query_params.get("name")
         if name:
-            queryset = queryset.filter(
-                name__icontains=name
-            )
+            queryset = queryset.filter(name__icontains=name)
         return queryset
 
     def get_serializer_class(self):
@@ -329,14 +293,9 @@ class AirplaneTypeViewSet(ModelViewSet):
                 name="name",
                 description="Filter by airplane type name",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Commercial"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="Commercial")],
             ),
-        ]
+        ],
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -345,24 +304,24 @@ class AirplaneTypeViewSet(ModelViewSet):
 @extend_schema_view(
     create=extend_schema(
         summary="Create an airplane model",
-        description="Admin can create an airplane model"
+        description="Admin can create an airplane model",
     ),
     retrieve=extend_schema(
         summary="Get a detailed info about specific airplane",
-        description="User can get a detailed info about specific airplane"
+        description="User can get a detailed info about specific airplane",
     ),
     update=extend_schema(
         summary="Update info about specific airplane",
-        description="Admin can update information about specific airplane"
+        description="Admin can update information about specific airplane",
     ),
     partial_update=extend_schema(
         summary="Partial update of specific airplane",
-        description="Admin can make a partial update of specific airplane"
+        description="Admin can make a partial update of specific airplane",
     ),
     destroy=extend_schema(
         summary="Delete a specific airplane",
-        description="Admin can delete specific airplane"
-    )
+        description="Admin can delete specific airplane",
+    ),
 )
 class AirplaneViewSet(ModelViewSet):
     queryset = Airplane.objects.all()
@@ -372,9 +331,7 @@ class AirplaneViewSet(ModelViewSet):
         queryset = self.queryset
         name = self.request.query_params.get("name")
         if name:
-            queryset = queryset.filter(
-                name__icontains=name
-            )
+            queryset = queryset.filter(name__icontains=name)
         return queryset
 
     def get_serializer_class(self):
@@ -395,14 +352,9 @@ class AirplaneViewSet(ModelViewSet):
                 name="name",
                 description="Filter by airplane name",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Airbus"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="Airbus")],
             ),
-        ]
+        ],
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -411,7 +363,7 @@ class AirplaneViewSet(ModelViewSet):
         methods=["POST"],
         detail=True,
         url_path="upload-image",
-        permission_classes=[IsAdminAllORIsAuthenticatedOrReadOnly]
+        permission_classes=[IsAdminAllORIsAuthenticatedOrReadOnly],
     )
     def upload_image(self, request: Request, pk=None):
         airplane = self.get_object()
@@ -423,25 +375,24 @@ class AirplaneViewSet(ModelViewSet):
 
 @extend_schema_view(
     create=extend_schema(
-        summary="Create a flight",
-        description="Admin can create a flight"
+        summary="Create a flight", description="Admin can create a flight"
     ),
     retrieve=extend_schema(
         summary="Get a detailed info about specific flight",
-        description="User can get a detailed info about specific flight"
+        description="User can get a detailed info about specific flight",
     ),
     update=extend_schema(
         summary="Update info about specific flight",
-        description="Admin can update information about specific flight"
+        description="Admin can update information about specific flight",
     ),
     partial_update=extend_schema(
         summary="Partial update of specific flight",
-        description="Admin can make a partial update of specific flight"
+        description="Admin can make a partial update of specific flight",
     ),
     destroy=extend_schema(
         summary="Delete a specific flight",
-        description="Admin can delete specific flight"
-    )
+        description="Admin can delete specific flight",
+    ),
 )
 class FlightViewSet(ModelViewSet):
     queryset = Flight.objects.all()
@@ -460,21 +411,15 @@ class FlightViewSet(ModelViewSet):
         arrival_hour = self.request.query_params.get("arrival_hour")
         arrival_minute = self.request.query_params.get("arrival_minute")
         if flight_id:
-            queryset = self.queryset.filter(
-                id__in=flight_id
-            )
+            queryset = self.queryset.filter(id__in=flight_id)
         if source:
-            queryset = self.queryset.filter(
-                route__source__name__icontains=source
-            )
+            queryset = self.queryset.filter(route__source__name__icontains=source)
         if destination:
             queryset = self.queryset.filter(
                 route__destination__name__icontains=destination
             )
         if airplane:
-            queryset = self.queryset.filter(
-                airplane__name__icontains=airplane
-            )
+            queryset = self.queryset.filter(airplane__name__icontains=airplane)
         if departure_date:
             date = datetime.strptime(departure_date, "%Y-%m-%d").date()
             queryset = queryset.filter(departure_time__date=date)
@@ -490,14 +435,12 @@ class FlightViewSet(ModelViewSet):
         if arrival_minute:
             queryset = queryset.filter(arrival_time__minute=arrival_minute)
         if self.action in ("list", "retrieve"):
-            return queryset.select_related(
-            ).prefetch_related("crews").annotate(
-                tickets_available=F(
-                    "airplane__rows"
-                ) * F(
-                    "airplane__seats_in_row"
-                ) - Count(
-                    "flight_tickets"
+            return (
+                queryset.select_related()
+                .prefetch_related("crews")
+                .annotate(
+                    tickets_available=F("airplane__rows") * F("airplane__seats_in_row")
+                    - Count("flight_tickets")
                 )
             )
         return queryset
@@ -518,115 +461,63 @@ class FlightViewSet(ModelViewSet):
                 name="id",
                 description="Filter by flight id",
                 type=int,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value=1
-                    )
-                ]
+                examples=[OpenApiExample("Example", value=1)],
             ),
             OpenApiParameter(
                 name="airplane",
                 description="Filter by airplane name",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Airbus"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="Airbus")],
             ),
-
             OpenApiParameter(
                 name="source",
                 description="Filter by departure airport",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="London"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="London")],
             ),
             OpenApiParameter(
                 name="destination",
                 description="Filter by arrival airport",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Paris"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="Paris")],
             ),
-
             OpenApiParameter(
                 name="departure_time",
                 description="Filter by airplane departure time",
                 type=OpenApiTypes.DATETIME,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="2024-05-21"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="2024-05-21")],
             ),
             OpenApiParameter(
                 name="departure_hour",
                 description="Filter by airplane departure hour",
                 type=OpenApiTypes.TIME,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="08"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="08")],
             ),
             OpenApiParameter(
                 name="departure_minute",
                 description="Filter by airplane departure minute",
                 type=OpenApiTypes.TIME,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="30"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="30")],
             ),
             OpenApiParameter(
                 name="arrival_time",
                 description="Filter by airplane arrival time",
                 type=OpenApiTypes.DATETIME,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="2024-05-21"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="2024-05-21")],
             ),
             OpenApiParameter(
                 name="arrival_hour",
                 description="Filter by airplane arrival hour",
                 type=OpenApiTypes.DATETIME,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="10"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="10")],
             ),
             OpenApiParameter(
                 name="arrival_minute",
                 description="Filter by airplane arrival minute",
                 type=OpenApiTypes.DATETIME,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="00"
-                    )
-                ]
+                examples=[OpenApiExample("Example", value="00")],
             ),
-        ]
+        ],
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -634,25 +525,24 @@ class FlightViewSet(ModelViewSet):
 
 @extend_schema_view(
     create=extend_schema(
-        summary="Create an order",
-        description="Authorized user can create an order"
+        summary="Create an order", description="Authorized user can create an order"
     ),
     retrieve=extend_schema(
         summary="Get a detailed info about specific order",
-        description="User can get a detailed info about his order"
+        description="User can get a detailed info about his order",
     ),
     update=extend_schema(
         summary="Update info about specific order",
-        description="Admin can update information about specific order or user can if it's user's own order"
+        description="Admin can update information about specific order or user can if it's user's own order",
     ),
     partial_update=extend_schema(
         summary="Partial update of specific order",
-        description="Admin can make a partial update of specific order or user can if it's user's own order"
+        description="Admin can make a partial update of specific order or user can if it's user's own order",
     ),
     destroy=extend_schema(
         summary="Delete a specific order",
-        description="Admin can delete specific order or user can if it's user's own order"
-    )
+        description="Admin can delete specific order or user can if it's user's own order",
+    ),
 )
 class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
@@ -696,14 +586,9 @@ class OrderViewSet(ModelViewSet):
                 name="ticket_id",
                 description="Filter by ticket ids",
                 type=int,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value=1
-                    )
-                ]
+                examples=[OpenApiExample("Example", value=1)],
             ),
-        ]
+        ],
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -712,20 +597,20 @@ class OrderViewSet(ModelViewSet):
 @extend_schema_view(
     retrieve=extend_schema(
         summary="Get a detailed info about specific ticket",
-        description="Admin can get a detailed info about specific ticket or user can if it's user's ticket"
+        description="Admin can get a detailed info about specific ticket or user can if it's user's ticket",
     ),
     update=extend_schema(
         summary="Update info about specific ticket",
-        description="Admin can update information about specific ticket or user can if it's user's ticket"
+        description="Admin can update information about specific ticket or user can if it's user's ticket",
     ),
     partial_update=extend_schema(
         summary="Partial update of specific ticket",
-        description="Admin can make a partial update of specific ticket or user can if it's user's ticket"
+        description="Admin can make a partial update of specific ticket or user can if it's user's ticket",
     ),
     destroy=extend_schema(
         summary="Delete a specific flight",
-        description="Admin can delete specific ticket or user can if it's user's own ticket"
-    )
+        description="Admin can delete specific ticket or user can if it's user's own ticket",
+    ),
 )
 class TicketViewSet(ModelViewSet):
     queryset = Ticket.objects.all()
@@ -744,14 +629,12 @@ class TicketViewSet(ModelViewSet):
                 start_id, end_id = map(int, ticket_id.split("-"))
                 queryset = queryset.filter(id__range=(start_id, end_id))
             else:
-                queryset = self.queryset.filter(
-                    id__in=ticket_id
-                )
+                queryset = self.queryset.filter(id__in=ticket_id)
 
         if flight_info:
             queryset = self.queryset.filter(
-                Q(flight__route__source__name__icontains=flight_info) |
-                Q(flight__route__destination__name__icontains=flight_info)
+                Q(flight__route__source__name__icontains=flight_info)
+                | Q(flight__route__destination__name__icontains=flight_info)
             )
         if self.action in ("list", "retrieve"):
             return queryset.select_related()
@@ -774,28 +657,17 @@ class TicketViewSet(ModelViewSet):
                 description="Filter ticket by id or range of ids",
                 type=int,
                 examples=[
-                    OpenApiExample(
-                        "Example 1",
-                        value=1
-                    ),
-                    OpenApiExample(
-                        "Example 2",
-                        value=1 - 15
-                    )
-                ]
+                    OpenApiExample("Example 1", value=1),
+                    OpenApiExample("Example 2", value=1 - 15),
+                ],
             ),
             OpenApiParameter(
                 name="route",
                 description="Filter tickets by flight info",
                 type=str,
-                examples=[
-                    OpenApiExample(
-                        "Example",
-                        value="Paris"
-                    )
-                ]
-            )
-        ]
+                examples=[OpenApiExample("Example", value="Paris")],
+            ),
+        ],
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

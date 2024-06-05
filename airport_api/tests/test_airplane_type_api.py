@@ -4,7 +4,10 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 from airport_api.models import AirplaneType
-from airport_api.serializers import AirplaneTypeListSerializer, AirplaneTypeRetrieveSerializer
+from airport_api.serializers import (
+    AirplaneTypeListSerializer,
+    AirplaneTypeRetrieveSerializer,
+)
 
 AIRPLANE_TYPE_URL = reverse("api_airport:airplanetype-list")
 
@@ -28,17 +31,12 @@ class AuthenticatedAirplaneTypetApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1"
+            email="Test@test.test", password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
 
-        self.airplanetype_1 = AirplaneType.objects.create(
-            name="Airplane Type 1"
-        )
-        self.airplanetype_2 = AirplaneType.objects.create(
-            name="Airplane Type 2"
-        )
+        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
+        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
 
     def test_airplane_type_list(self):
         res = self.client.get(AIRPLANE_TYPE_URL)
@@ -82,23 +80,15 @@ class AdminAirportTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="test_admin@admin.com",
-            password="Testadminpsw",
-            is_staff=True
+            email="test_admin@admin.com", password="Testadminpsw", is_staff=True
         )
         self.client.force_authenticate(self.user)
 
-        self.airplanetype_1 = AirplaneType.objects.create(
-            name="Airplane Type 1"
-        )
-        self.airplanetype_2 = AirplaneType.objects.create(
-            name="Airplane Type 2"
-        )
+        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
+        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
 
     def test_create_airplane_type(self):
-        payload = {
-            "name": "Airplane Type 3"
-        }
+        payload = {"name": "Airplane Type 3"}
         res = self.client.post(AIRPLANE_TYPE_URL, payload)
 
         airport = AirplaneType.objects.get(id=res.data["id"])
@@ -109,9 +99,7 @@ class AdminAirportTests(TestCase):
             self.assertEqual(payload[key], getattr(airport, key))
 
     def test_update_airplane_type(self):
-        payload = {
-            "name": "Updated Type"
-        }
+        payload = {"name": "Updated Type"}
         res = self.client.put(detail_url(self.airplanetype_2.id), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('airport_api', '0007_airplane_image'),
+        ("airport_api", "0007_airplane_image"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='crew',
-            name='flying_hours',
+            model_name="crew",
+            name="flying_hours",
             field=models.FloatField(default=0),
         ),
     ]

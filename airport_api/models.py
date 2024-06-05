@@ -36,14 +36,10 @@ class Airport(models.Model):
 
 class Route(models.Model):
     source = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name="routes_from"
+        Airport, on_delete=models.CASCADE, related_name="routes_from"
     )
     destination = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name="routes_to"
+        Airport, on_delete=models.CASCADE, related_name="routes_to"
     )
     distance = models.FloatField()
 
@@ -76,7 +72,9 @@ class AirplaneType(models.Model):
 
 
 def airplane_image_path(instance: "Airplane", filename: str) -> pathlib.Path:
-    filename = f"{slugify(instance.name)}-{uuid.uuid4()}" + pathlib.Path(filename).suffix
+    filename = (
+        f"{slugify(instance.name)}-{uuid.uuid4()}" + pathlib.Path(filename).suffix
+    )
     return pathlib.Path("upload/airplanes") / pathlib.Path(filename)
 
 
@@ -85,9 +83,7 @@ class Airplane(models.Model):
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
     airplane_type = models.ForeignKey(
-        AirplaneType,
-        on_delete=models.CASCADE,
-        related_name="airplanes"
+        AirplaneType, on_delete=models.CASCADE, related_name="airplanes"
     )
     image = models.ImageField(null=True, upload_to=airplane_image_path)
 
@@ -104,33 +100,24 @@ class Airplane(models.Model):
 
 class Flight(models.Model):
     route = models.ForeignKey(
-        Route,
-        on_delete=models.CASCADE,
-        related_name="route_flights"
+        Route, on_delete=models.CASCADE, related_name="route_flights"
     )
     airplane = models.ForeignKey(
-        Airplane,
-        on_delete=models.CASCADE,
-        related_name="airplane_flights"
+        Airplane, on_delete=models.CASCADE, related_name="airplane_flights"
     )
-    crews = models.ManyToManyField(
-        Crew,
-        related_name="crew_flights"
-    )
+    crews = models.ManyToManyField(Crew, related_name="crew_flights")
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
     accounted = models.BooleanField(default=False)
 
     @staticmethod
     def has_overlapping_crew(
-            crew_ids: list[int],
-            departure_time: datetime,
-            arrival_time: datetime
+        crew_ids: list[int], departure_time: datetime, arrival_time: datetime
     ) -> bool:
         return Flight.objects.filter(
             crews__id__in=crew_ids,
             departure_time__lt=arrival_time,
-            arrival_time__gt=departure_time
+            arrival_time__gt=departure_time,
         ).exists()
 
     @property
@@ -152,10 +139,7 @@ class Flight(models.Model):
 
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["-created_at"]
@@ -168,40 +152,28 @@ class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
     flight = models.ForeignKey(
-        Flight,
-        on_delete=models.CASCADE,
-        related_name="flight_tickets"
+        Flight, on_delete=models.CASCADE, related_name="flight_tickets"
     )
-    order = models.ForeignKey(
-        Order,
-        on_delete=models.CASCADE,
-        related_name="tickets"
-    )
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="tickets")
 
     class Meta:
         ordering = ["seat"]
 
     @staticmethod
     def validate_seat_and_rows(
-            seat: int,
-            num_seats: int,
-            row: int,
-            num_rows: int,
-            error_to_raise: Type[Exception]
+        seat: int,
+        num_seats: int,
+        row: int,
+        num_rows: int,
+        error_to_raise: Type[Exception],
     ):
         if not (1 <= seat <= num_seats):
             raise error_to_raise(
-                {
-                    "seat": f"seat must be in a range of "
-                            f"[1,{num_seats}],not [{seat}]"
-                }
+                {"seat": f"seat must be in a range of " f"[1,{num_seats}],not [{seat}]"}
             )
         elif not (1 <= row <= num_rows):
             raise error_to_raise(
-                {
-                    "row": f"row must be in a range of "
-                           f"[1,{num_rows}],not [{row}]"
-                }
+                {"row": f"row must be in a range of " f"[1,{num_rows}],not [{row}]"}
             )
 
     def clean(self):
@@ -210,23 +182,14 @@ class Ticket(models.Model):
             self.flight.airplane.seats_in_row,
             self.row,
             self.flight.airplane.rows,
-            ValueError
+            ValueError,
         )
 
     def save(
-            self,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
+        self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         self.full_clean()
-        super(Ticket, self).save(
-            force_insert,
-            force_update,
-            using,
-            update_fields
-        )
+        super(Ticket, self).save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return (

@@ -28,18 +28,15 @@ class AuthenticatedAirportApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1"
+            email="Test@test.test", password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
 
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1",
-            closest_big_city="Random City 1"
+            name="Airport Name 1", closest_big_city="Random City 1"
         )
         self.airport_2 = Airport.objects.create(
-            name="Airport Name 2",
-            closest_big_city="Random City 2"
+            name="Airport Name 2", closest_big_city="Random City 2"
         )
 
     def test_airport_list(self):
@@ -64,10 +61,7 @@ class AuthenticatedAirportApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_create_airport_forbidden(self):
-        payload = {
-            "name": "Name",
-            "closest_big_city": "City"
-        }
+        payload = {"name": "Name", "closest_big_city": "City"}
         res = self.client.post(AIRPORT_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -85,22 +79,16 @@ class AdminAirportTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="test_admin@admin.com",
-            password="Testadminpsw",
-            is_staff=True
+            email="test_admin@admin.com", password="Testadminpsw", is_staff=True
         )
         self.client.force_authenticate(self.user)
 
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1",
-            closest_big_city="Random City 1"
+            name="Airport Name 1", closest_big_city="Random City 1"
         )
 
     def test_create_airport(self):
-        payload = {
-            "name": "Name",
-            "closest_big_city": "City"
-        }
+        payload = {"name": "Name", "closest_big_city": "City"}
         res = self.client.post(AIRPORT_URL, payload)
 
         airport = Airport.objects.get(id=res.data["id"])
@@ -111,10 +99,7 @@ class AdminAirportTests(TestCase):
             self.assertEqual(payload[key], getattr(airport, key))
 
     def test_update_airport(self):
-        payload = {
-            "name": "Updated Name",
-            "closest_big_city": "Updated City"
-        }
+        payload = {"name": "Updated Name", "closest_big_city": "Updated City"}
         res = self.client.put(detail_url(self.airport_1.id), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 

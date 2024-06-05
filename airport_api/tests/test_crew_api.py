@@ -28,20 +28,15 @@ class AuthenticatedCrewApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1"
+            email="Test@test.test", password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
 
         self.crew_member1 = Crew.objects.create(
-            first_name="Qwerty",
-            last_name="Johnson",
-            flying_hours=0.0
+            first_name="Qwerty", last_name="Johnson", flying_hours=0.0
         )
         self.crew_member2 = Crew.objects.create(
-            first_name="John",
-            last_name="Qwerty",
-            flying_hours=0.0
+            first_name="John", last_name="Qwerty", flying_hours=0.0
         )
 
     def test_airport_list(self):
@@ -77,7 +72,7 @@ class AuthenticatedCrewApiTests(TestCase):
         payload = {
             "first_name": "Michael",
             "last_name": "Ellipsis",
-            "flying_hours": 0.0
+            "flying_hours": 0.0,
         }
         res = self.client.post(CREW_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
@@ -95,28 +90,22 @@ class AdminCrewTest(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1",
-            is_staff=True
+            email="Test@test.test", password="Testpsw1", is_staff=True
         )
         self.client.force_authenticate(self.user)
 
         self.crew_member1 = Crew.objects.create(
-            first_name="Qwerty",
-            last_name="Johnson",
-            flying_hours=0.0
+            first_name="Qwerty", last_name="Johnson", flying_hours=0.0
         )
         self.crew_member2 = Crew.objects.create(
-            first_name="John",
-            last_name="Qwerty",
-            flying_hours=0.0
+            first_name="John", last_name="Qwerty", flying_hours=0.0
         )
 
     def test_add_crew_member(self):
         payload = {
             "first_name": "Michael",
             "last_name": "Ellipsis",
-            "flying_hours": 0.0
+            "flying_hours": 0.0,
         }
         res = self.client.post(CREW_URL, payload)
 
@@ -131,7 +120,7 @@ class AdminCrewTest(TestCase):
         payload = {
             "first_name": "Michael",
             "last_name": "Ellipsis",
-            "flying_hours": 0.0
+            "flying_hours": 0.0,
         }
 
         res = self.client.put(detail_url(self.crew_member2.id), payload)

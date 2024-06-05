@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('airport_api', '0008_crew_flying_hours'),
+        ("airport_api", "0008_crew_flying_hours"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='flight',
-            name='accounted',
+            model_name="flight",
+            name="accounted",
             field=models.BooleanField(default=False),
         ),
     ]

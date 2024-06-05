@@ -6,17 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('airport_api', '0003_alter_airplane_options_alter_airplanetype_options_and_more'),
+        (
+            "airport_api",
+            "0003_alter_airplane_options_alter_airplanetype_options_and_more",
+        ),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='route',
-            options={'ordering': ['source']},
+            name="route",
+            options={"ordering": ["source"]},
         ),
         migrations.AddField(
-            model_name='flight',
-            name='crews',
-            field=models.ManyToManyField(related_name='crew_flights', to='airport_api.crew'),
+            model_name="flight",
+            name="crews",
+            field=models.ManyToManyField(
+                related_name="crew_flights", to="airport_api.crew"
+            ),
         ),
     ]

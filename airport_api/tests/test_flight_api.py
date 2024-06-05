@@ -30,67 +30,46 @@ class AuthenticatedFlightApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1"
+            email="Test@test.test", password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1",
-            closest_big_city="Random City 1"
+            name="Airport Name 1", closest_big_city="Random City 1"
         )
         self.airport_2 = Airport.objects.create(
-            name="Airport Name 2",
-            closest_big_city="Random City 2"
+            name="Airport Name 2", closest_big_city="Random City 2"
         )
 
         self.route_1 = Route.objects.create(
-            source=self.airport_1,
-            destination=self.airport_2,
-            distance=700.0
+            source=self.airport_1, destination=self.airport_2, distance=700.0
         )
         self.route_2 = Route.objects.create(
-            source=self.airport_2,
-            destination=self.airport_1,
-            distance=700.0
+            source=self.airport_2, destination=self.airport_1, distance=700.0
         )
         self.crew_member1 = Crew.objects.create(
-            first_name="Qwerty",
-            last_name="Johnson",
-            flying_hours=0.0
+            first_name="Qwerty", last_name="Johnson", flying_hours=0.0
         )
         self.crew_member2 = Crew.objects.create(
-            first_name="John",
-            last_name="Qwerty",
-            flying_hours=0.0
+            first_name="John", last_name="Qwerty", flying_hours=0.0
         )
 
         self.crew_member3 = Crew.objects.create(
-            first_name="Bob",
-            last_name="Miles",
-            flying_hours=0.0
+            first_name="Bob", last_name="Miles", flying_hours=0.0
         )
-        self.crew_member4 = Crew.objects.create(
-            first_name="Alex",
-            last_name="Ferg"
-        )
-        self.airplanetype_1 = AirplaneType.objects.create(
-            name="Airplane Type 1"
-        )
-        self.airplanetype_2 = AirplaneType.objects.create(
-            name="Airplane Type 2"
-        )
+        self.crew_member4 = Crew.objects.create(first_name="Alex", last_name="Ferg")
+        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
+        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
         self.airplane_1 = Airplane.objects.create(
             name="Airplane Name 1",
             rows=55,
             seats_in_row=10,
-            airplane_type=self.airplanetype_1
-
+            airplane_type=self.airplanetype_1,
         )
         self.airplane_2 = Airplane.objects.create(
             name="Airplane Name 2",
             rows=80,
             seats_in_row=10,
-            airplane_type=self.airplanetype_2
+            airplane_type=self.airplanetype_2,
         )
 
         departure_time = datetime.now(timezone.utc)
@@ -100,7 +79,7 @@ class AuthenticatedFlightApiTests(TestCase):
             route=self.route_1,
             airplane=self.airplane_1,
             departure_time=departure_time,
-            arrival_time=arrival_time
+            arrival_time=arrival_time,
         )
         self.flight_1.crews.add(self.crew_member1, self.crew_member2)
 
@@ -108,7 +87,7 @@ class AuthenticatedFlightApiTests(TestCase):
             route=self.route_2,
             airplane=self.airplane_2,
             departure_time=departure_time + timedelta(days=1, hours=1, minutes=10),
-            arrival_time=arrival_time + timedelta(days=1, hours=2)
+            arrival_time=arrival_time + timedelta(days=1, hours=2),
         )
         self.flight_2.crews.add(self.crew_member3, self.crew_member4)
 
@@ -217,8 +196,7 @@ class AuthenticatedFlightApiTests(TestCase):
             "airplane": self.airplane_1,
             "crews": [self.crew_member2, self.crew_member4],
             "departure_time": "2024-06-27T12:00:00Z",
-            "arrival_time": "2024-06-27T14:00:00Z"
-
+            "arrival_time": "2024-06-27T14:00:00Z",
         }
         res = self.client.post(FLIGHT_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
@@ -236,68 +214,46 @@ class AdminFlightTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1",
-            is_staff=True
+            email="Test@test.test", password="Testpsw1", is_staff=True
         )
         self.client.force_authenticate(self.user)
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1",
-            closest_big_city="Random City 1"
+            name="Airport Name 1", closest_big_city="Random City 1"
         )
         self.airport_2 = Airport.objects.create(
-            name="Airport Name 2",
-            closest_big_city="Random City 2"
+            name="Airport Name 2", closest_big_city="Random City 2"
         )
 
         self.route_1 = Route.objects.create(
-            source=self.airport_1,
-            destination=self.airport_2,
-            distance=700.0
+            source=self.airport_1, destination=self.airport_2, distance=700.0
         )
         self.route_2 = Route.objects.create(
-            source=self.airport_2,
-            destination=self.airport_1,
-            distance=700.0
+            source=self.airport_2, destination=self.airport_1, distance=700.0
         )
         self.crew_member1 = Crew.objects.create(
-            first_name="Qwerty",
-            last_name="Johnson",
-            flying_hours=0.0
+            first_name="Qwerty", last_name="Johnson", flying_hours=0.0
         )
         self.crew_member2 = Crew.objects.create(
-            first_name="John",
-            last_name="Qwerty",
-            flying_hours=0.0
+            first_name="John", last_name="Qwerty", flying_hours=0.0
         )
 
         self.crew_member3 = Crew.objects.create(
-            first_name="Bob",
-            last_name="Miles",
-            flying_hours=0.0
+            first_name="Bob", last_name="Miles", flying_hours=0.0
         )
-        self.crew_member4 = Crew.objects.create(
-            first_name="Alex",
-            last_name="Ferg"
-        )
-        self.airplanetype_1 = AirplaneType.objects.create(
-            name="Airplane Type 1"
-        )
-        self.airplanetype_2 = AirplaneType.objects.create(
-            name="Airplane Type 2"
-        )
+        self.crew_member4 = Crew.objects.create(first_name="Alex", last_name="Ferg")
+        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
+        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
         self.airplane_1 = Airplane.objects.create(
             name="Airplane Name 1",
             rows=55,
             seats_in_row=10,
-            airplane_type=self.airplanetype_1
-
+            airplane_type=self.airplanetype_1,
         )
         self.airplane_2 = Airplane.objects.create(
             name="Airplane Name 2",
             rows=80,
             seats_in_row=10,
-            airplane_type=self.airplanetype_2
+            airplane_type=self.airplanetype_2,
         )
 
         departure_time = datetime.now(timezone.utc)
@@ -307,7 +263,7 @@ class AdminFlightTests(TestCase):
             route=self.route_1,
             airplane=self.airplane_1,
             departure_time=departure_time,
-            arrival_time=arrival_time
+            arrival_time=arrival_time,
         )
         self.flight_1.crews.add(self.crew_member1, self.crew_member2)
 
@@ -315,7 +271,7 @@ class AdminFlightTests(TestCase):
             route=self.route_2,
             airplane=self.airplane_2,
             departure_time=departure_time + timedelta(days=1, hours=1, minutes=10),
-            arrival_time=arrival_time + timedelta(days=1, hours=2)
+            arrival_time=arrival_time + timedelta(days=1, hours=2),
         )
         self.flight_2.crews.add(self.crew_member3, self.crew_member4)
 
@@ -325,8 +281,7 @@ class AdminFlightTests(TestCase):
             "airplane": self.airplane_1.id,
             "crews": [self.crew_member2.id, self.crew_member4.id],
             "departure_time": "2024-06-27T12:00:00Z",
-            "arrival_time": "2024-06-27T14:00:00Z"
-
+            "arrival_time": "2024-06-27T14:00:00Z",
         }
         res = self.client.post(FLIGHT_URL, payload)
         flight = Flight.objects.get(id=res.data["id"])
@@ -354,8 +309,7 @@ class AdminFlightTests(TestCase):
             "airplane": self.airplane_1.id,
             "crews": [self.crew_member2.id, self.crew_member4.id],
             "departure_time": "2024-06-27T12:00:00Z",
-            "arrival_time": "2024-06-27T14:00:00Z"
-
+            "arrival_time": "2024-06-27T14:00:00Z",
         }
         res = self.client.put(detail_url(self.flight_1.id), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)

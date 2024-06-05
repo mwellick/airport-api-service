@@ -28,29 +28,22 @@ class AuthenticatedRouteApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1"
+            email="Test@test.test", password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
 
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1",
-            closest_big_city="Random City 1"
+            name="Airport Name 1", closest_big_city="Random City 1"
         )
         self.airport_2 = Airport.objects.create(
-            name="Airport Name 2",
-            closest_big_city="Random City 2"
+            name="Airport Name 2", closest_big_city="Random City 2"
         )
 
         self.route_1 = Route.objects.create(
-            source=self.airport_1,
-            destination=self.airport_2,
-            distance=700.0
+            source=self.airport_1, destination=self.airport_2, distance=700.0
         )
         self.route_2 = Route.objects.create(
-            source=self.airport_2,
-            destination=self.airport_1,
-            distance=700.0
+            source=self.airport_2, destination=self.airport_1, distance=700.0
         )
 
     def test_route_list(self):
@@ -83,10 +76,7 @@ class AuthenticatedRouteApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_create_route_forbidden(self):
-        payload = {
-            "source": "Name 3",
-            "destination": "Name 2"
-        }
+        payload = {"source": "Name 3", "destination": "Name 2"}
         res = self.client.post(ROUTE_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -104,41 +94,32 @@ class AdminAirportTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test",
-            password="Testpsw1",
-            is_staff=True
+            email="Test@test.test", password="Testpsw1", is_staff=True
         )
         self.client.force_authenticate(self.user)
 
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1",
-            closest_big_city="Random City 1"
+            name="Airport Name 1", closest_big_city="Random City 1"
         )
         self.airport_2 = Airport.objects.create(
-            name="Airport Name 2",
-            closest_big_city="Random City 2"
+            name="Airport Name 2", closest_big_city="Random City 2"
         )
         self.airport_3 = Airport.objects.create(
-            name="Airport Name 3",
-            closest_big_city="Random City 3"
+            name="Airport Name 3", closest_big_city="Random City 3"
         )
 
         self.route_1 = Route.objects.create(
-            source=self.airport_1,
-            destination=self.airport_2,
-            distance=700.0
+            source=self.airport_1, destination=self.airport_2, distance=700.0
         )
         self.route_2 = Route.objects.create(
-            source=self.airport_2,
-            destination=self.airport_1,
-            distance=700.0
+            source=self.airport_2, destination=self.airport_1, distance=700.0
         )
 
     def test_create_route(self):
         payload = {
             "source": self.airport_3.id,
             "destination": self.airport_1.id,
-            "distance": 900.0
+            "distance": 900.0,
         }
         res = self.client.post(ROUTE_URL, payload)
 
@@ -157,7 +138,7 @@ class AdminAirportTests(TestCase):
         payload = {
             "source": self.airport_3.id,
             "destination": self.airport_1.id,
-            "distance": 900.0
+            "distance": 900.0,
         }
         res = self.client.put(detail_url(self.route_2.id), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)

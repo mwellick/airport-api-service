@@ -10,39 +10,61 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('airport_api', '0001_initial'),
+        ("airport_api", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="order",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddField(
-            model_name='route',
-            name='destination',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='routes_to', to='airport_api.airport'),
+            model_name="route",
+            name="destination",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="routes_to",
+                to="airport_api.airport",
+            ),
         ),
         migrations.AddField(
-            model_name='route',
-            name='source',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='routes_from', to='airport_api.airport'),
+            model_name="route",
+            name="source",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="routes_from",
+                to="airport_api.airport",
+            ),
         ),
         migrations.AddField(
-            model_name='flight',
-            name='route',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='route_flights', to='airport_api.route'),
+            model_name="flight",
+            name="route",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="route_flights",
+                to="airport_api.route",
+            ),
         ),
         migrations.AddField(
-            model_name='ticket',
-            name='flight',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='flight_tickets', to='airport_api.flight'),
+            model_name="ticket",
+            name="flight",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="flight_tickets",
+                to="airport_api.flight",
+            ),
         ),
         migrations.AddField(
-            model_name='ticket',
-            name='order',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='order_tickets', to='airport_api.order'),
+            model_name="ticket",
+            name="order",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="order_tickets",
+                to="airport_api.order",
+            ),
         ),
     ]
