@@ -10,4 +10,14 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN mkdir -p /files/media
+
+RUN adduser \
+    --disabled-password \
+    --no-create-home \
+    airport_user
+
+RUN chown -R airport_user /files/media
+RUN chmod -R 755 /files/media
+
+USER airport_user
