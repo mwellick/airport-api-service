@@ -5,3 +5,6 @@ db.sqlite3
 media
 .dockerignore
 .env
+celerybeat-schedule.dir
+celerybeat-schedule.bak
+celerybeat-schedule.dat

@@ -133,7 +133,9 @@ class Flight(models.Model):
         return (
             f"{self.route.source.name} -> {self.route.destination.name}. "
             f"Distance: {self.route.distance} km. "
-            f"Flight time: {self.flight_time}"
+            f"Flight time: {self.flight_time} "
+            f"Flight is over: {self.flight_is_over} "
+            f"Accounted: {self.accounted}"
         )
 
 

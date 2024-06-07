@@ -1,6 +1,6 @@
 from .models import Flight
-
 from celery import shared_task
+
 
 
 @shared_task
@@ -13,7 +13,6 @@ def update_flying_hours() -> None:
             hours_flight_time = round(hours_flight_time, 2)
             for crew in flight.crews.all():
                 crew.flying_hours += hours_flight_time
-
                 crew.save()
             flight.accounted = True
             flight.save()

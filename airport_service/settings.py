@@ -82,6 +82,8 @@ WSGI_APPLICATION = "airport_service.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+os.environ.setdefault("DJANGO_ENV", "development")
 DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
 
 if DJANGO_ENV == "production":
@@ -196,6 +198,7 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BEAT_SCHEDULE = {
     "update-flying-hours-every-5-minutes": {
         "task": "airport_api.tasks.update_flying_hours",
-        "schedule": crontab(minute="*/5"),
+        "schedule": crontab(minute="*/1"),
     },
 }
+
