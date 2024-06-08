@@ -6,6 +6,9 @@ services:
       - .env
     ports:
       - "8001:8000"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND = redis://redis:6379
     volumes:
       - my_media:/files/media
     command: >
@@ -14,6 +17,7 @@ services:
             python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
+      - redis
 
 
   db:
@@ -26,6 +30,36 @@ services:
     volumes:
       - my_db:$PGDATA
 
+  redis:
+    image: "redis:alpine"
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A airport_service worker -l info -P eventlet
+    depends_on:
+      - db
+      - redis
+      - airport
+    restart: on-failure
+    env_file:
+      - .env
+
+
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A airport_service beat -l info
+    depends_on:
+      - db
+      - redis
+      - airport
+    restart: on-failure
+    env_file:
+      - .env
 
 
 volumes:
