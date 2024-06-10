@@ -91,7 +91,10 @@ def airplane_image_path(instance: "Airplane", filename: str) -> pathlib.Path:
 
 
 class Airplane(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(
+        max_length=255,
+        unique=True
+    )
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
     airplane_type = models.ForeignKey(
@@ -138,7 +141,9 @@ class Flight(models.Model):
 
     @staticmethod
     def has_overlapping_crew(
-        crew_ids: list[int], departure_time: datetime, arrival_time: datetime
+        crew_ids: list[int],
+        departure_time: datetime,
+        arrival_time: datetime
     ) -> bool:
         return Flight.objects.filter(
             crews__id__in=crew_ids,
