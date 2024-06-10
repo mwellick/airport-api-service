@@ -14,6 +14,18 @@ This is the Airport API service system for tracking straight flights from airpor
 5. **Docker Compose**: For developing the microservices.
 6. **Swagger**: For API documentation.
 
+### Airport Service Features
+
+* JWT authentication
+* Admin panel /admin/
+* Managing orders and tickets
+* Creating routes (based on airports)
+* Creating airplanes and airplane types
+* Creating crews
+* Creating flights.
+* Different types of filtering
+* The ability to upload airplanes images to represent a specific kind of airplane
+
 
 ### How to run:
 - Copy .env.sample -> .env and fill with all required data
@@ -26,7 +38,7 @@ This is the Airport API service system for tracking straight flights from airpor
 **email:** `admin@admin.com`  
 **password:** `Ellipsis`
 
-## Test default user:
+### Test default user:
 **email**: `qwe@qwerty.com`  
 **password**: `Qwerty123`
 
