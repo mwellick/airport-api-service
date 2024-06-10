@@ -30,7 +30,7 @@ This is the Airport API service system for tracking direct flights from airports
 - Copy .env.sample -> .env and fill with all required data
 - `docker-compose up --build`
 - Load db data from file (Optional)
-- `docker-compose exec -ti api python manage.py loaddata airport_service_db_data.json`
+- `docker-compose exec -ti airport python manage.py loaddata airport_service_db_data.json`
 - Create admin user (Optional)
 - `docker-compose exec -ti airport python manage.py createsuperuser`
 

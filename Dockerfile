@@ -10,4 +10,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+COPY airport_service_db_data.json airport_service_db_data.json
+
 RUN mkdir -p /files/media

@@ -537,7 +537,7 @@
   },
   {
     "model": "airport_api.airplane",
-    "pk": 7,
+    "pk": 8,
     "fields": {
       "name": "Bombardier CRJ200",
       "rows": 13,
@@ -764,7 +764,7 @@
         14,
         15
       ],
-      "departure_time": "2025-06-01T70:00:00Z",
+      "departure_time": "2025-01-13T07:00:00Z",
       "arrival_time": "2025-01-13T19:00:00Z"
     }
   },
@@ -788,7 +788,7 @@
     "model": "airport_api.order",
     "pk": 1,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:01:18.876Z",
       "user": 1
     }
   },
@@ -796,7 +796,7 @@
     "model": "airport_api.order",
     "pk": 2,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:02:18.876Z",
       "user": 1
     }
   },
@@ -804,7 +804,7 @@
     "model": "airport_api.order",
     "pk": 3,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:03:18.876Z",
       "user": 1
     }
   },
@@ -812,7 +812,7 @@
     "model": "airport_api.order",
     "pk": 4,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:04:18.876Z",
       "user": 1
     }
   },
@@ -820,7 +820,7 @@
     "model": "airport_api.order",
     "pk": 5,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:05:18.876Z",
       "user": 1
     }
   },
@@ -828,7 +828,7 @@
     "model": "airport_api.order",
     "pk": 6,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:06:18.876Z",
       "user": 2
     }
   },
@@ -836,7 +836,7 @@
     "model": "airport_api.order",
     "pk": 7,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:07:18.876Z",
       "user": 2
     }
   },
@@ -844,7 +844,7 @@
     "model": "airport_api.order",
     "pk": 8,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:08:18.876Z",
       "user": 2
     }
   },
@@ -852,7 +852,7 @@
     "model": "airport_api.order",
     "pk": 9,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:09:18.876Z",
       "user": 2
     }
   },
@@ -860,7 +860,7 @@
     "model": "airport_api.order",
     "pk": 10,
     "fields": {
-      "created_at": "2024-06-10T18:00:18.876Z",
+      "created_at": "2024-06-10T18:10:18.876Z",
       "user": 2
     }
   },
