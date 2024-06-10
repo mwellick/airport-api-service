@@ -1,5 +1,8 @@
-from datetime import timedelta, datetime, timezone
-
+from datetime import (
+    timedelta,
+    datetime,
+    timezone
+)
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.reverse import reverse
@@ -15,7 +18,10 @@ from airport_api.models import (
     Route,
     Airport,
 )
-from airport_api.serializers import TicketListSerializer, TicketRetrieveSerializer
+from airport_api.serializers import (
+    TicketListSerializer,
+    TicketRetrieveSerializer
+)
 
 TICKET_URL = reverse("api_airport:ticket-list")
 
@@ -40,35 +46,55 @@ class AuthenticatedTicketApiTests(
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test", password="Testpsw1"
+            email="Test@test.test",
+            password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1", closest_big_city="Random City 1"
+            name="Airport Name 1",
+            closest_big_city="Random City 1"
         )
         self.airport_2 = Airport.objects.create(
-            name="Airport Name 2", closest_big_city="Random City 2"
+            name="Airport Name 2",
+            closest_big_city="Random City 2"
         )
 
         self.route_1 = Route.objects.create(
-            source=self.airport_1, destination=self.airport_2, distance=700.0
+            source=self.airport_1,
+            destination=self.airport_2,
+            distance=700.0
         )
         self.route_2 = Route.objects.create(
-            source=self.airport_2, destination=self.airport_1, distance=700.0
+            source=self.airport_2,
+            destination=self.airport_1,
+            distance=700.0
         )
         self.crew_member1 = Crew.objects.create(
-            first_name="Qwerty", last_name="Johnson", flying_hours=0.0
+            first_name="Qwerty",
+            last_name="Johnson",
+            flying_hours=0.0
         )
         self.crew_member2 = Crew.objects.create(
-            first_name="John", last_name="Qwerty", flying_hours=0.0
+            first_name="John",
+            last_name="Qwerty",
+            flying_hours=0.0
         )
 
         self.crew_member3 = Crew.objects.create(
-            first_name="Bob", last_name="Miles", flying_hours=0.0
+            first_name="Bob",
+            last_name="Miles",
+            flying_hours=0.0
         )
-        self.crew_member4 = Crew.objects.create(first_name="Alex", last_name="Ferg")
-        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
-        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
+        self.crew_member4 = Crew.objects.create(
+            first_name="Alex",
+            last_name="Ferg"
+        )
+        self.airplanetype_1 = AirplaneType.objects.create(
+            name="Airplane Type 1"
+        )
+        self.airplanetype_2 = AirplaneType.objects.create(
+            name="Airplane Type 2"
+        )
         self.airplane_1 = Airplane.objects.create(
             name="Airplane Name 1",
             rows=55,
@@ -96,7 +122,11 @@ class AuthenticatedTicketApiTests(
         self.flight_2 = Flight.objects.create(
             route=self.route_2,
             airplane=self.airplane_2,
-            departure_time=departure_time + timedelta(days=1, hours=1, minutes=10),
+            departure_time=departure_time + timedelta(
+                days=1,
+                hours=1,
+                minutes=10
+            ),
             arrival_time=arrival_time + timedelta(days=1, hours=2),
         )
         self.flight_2.crews.add(self.crew_member3, self.crew_member4)
@@ -142,7 +172,11 @@ class AuthenticatedTicketApiTests(
     def test_update_ticket(self):
         payload = {"row": 7, "seat": 9, "flight": self.flight_1.id}
 
-        res = self.client.put(detail_url(self.ticket_1.id), payload, format="json")
+        res = self.client.put(
+            detail_url(
+                self.ticket_1.id
+            ), payload, format="json"
+        )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_delete_ticket(self):

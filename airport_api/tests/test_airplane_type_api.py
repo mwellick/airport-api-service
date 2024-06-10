@@ -31,12 +31,17 @@ class AuthenticatedAirplaneTypetApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test", password="Testpsw1"
+            email="Test@test.test",
+            password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
 
-        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
-        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
+        self.airplanetype_1 = AirplaneType.objects.create(
+            name="Airplane Type 1"
+        )
+        self.airplanetype_2 = AirplaneType.objects.create(
+            name="Airplane Type 2"
+        )
 
     def test_airplane_type_list(self):
         res = self.client.get(AIRPLANE_TYPE_URL)
@@ -80,12 +85,18 @@ class AdminAirportTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="test_admin@admin.com", password="Testadminpsw", is_staff=True
+            email="test_admin@admin.com",
+            password="Testadminpsw",
+            is_staff=True
         )
         self.client.force_authenticate(self.user)
 
-        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
-        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
+        self.airplanetype_1 = AirplaneType.objects.create(
+            name="Airplane Type 1"
+        )
+        self.airplanetype_2 = AirplaneType.objects.create(
+            name="Airplane Type 2"
+        )
 
     def test_create_airplane_type(self):
         payload = {"name": "Airplane Type 3"}

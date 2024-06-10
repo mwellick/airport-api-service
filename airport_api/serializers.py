@@ -1,6 +1,15 @@
 from django.db import transaction
 from rest_framework import serializers
-from .models import Crew, Airport, Route, AirplaneType, Airplane, Flight, Order, Ticket
+from .models import (
+    Crew,
+    Airport,
+    Route,
+    AirplaneType,
+    Airplane,
+    Flight,
+    Order,
+    Ticket
+)
 
 
 class CrewSerializer(serializers.ModelSerializer):
@@ -26,13 +35,20 @@ class CrewListSerializer(serializers.ModelSerializer):
 class CrewRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crew
-        fields = ["full_name", "flying_hours"]
+        fields = [
+            "full_name",
+            "flying_hours"
+        ]
 
 
 class AirportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airport
-        fields = ["id", "name", "closest_big_city"]
+        fields = [
+            "id",
+            "name",
+            "closest_big_city"
+        ]
 
 
 class AirportListSerializer(serializers.ModelSerializer):
@@ -56,12 +72,23 @@ class AirportRetrieveSerializer(serializers.ModelSerializer):
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
-        fields = ["id", "source", "destination", "distance"]
+        fields = [
+            "id",
+            "source",
+            "destination",
+            "distance"
+        ]
 
 
 class RouteListSerializer(serializers.ModelSerializer):
-    source = serializers.CharField(source="source.name", read_only=True)
-    destination = serializers.CharField(source="destination.name", read_only=True)
+    source = serializers.CharField(
+        source="source.name",
+        read_only=True
+    )
+    destination = serializers.CharField(
+        source="destination.name",
+        read_only=True
+    )
 
     class Meta:
         model = Route
@@ -73,8 +100,14 @@ class RouteListSerializer(serializers.ModelSerializer):
 
 
 class RouteRetrieveSerializer(serializers.ModelSerializer):
-    source = serializers.CharField(source="source.name", read_only=True)
-    destination = serializers.CharField(source="destination.name", read_only=True)
+    source = serializers.CharField(
+        source="source.name",
+        read_only=True
+    )
+    destination = serializers.CharField(
+        source="destination.name",
+        read_only=True
+    )
 
     class Meta:
         model = Route
@@ -88,13 +121,19 @@ class RouteRetrieveSerializer(serializers.ModelSerializer):
 class AirplaneTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = AirplaneType
-        fields = ["id", "name"]
+        fields = [
+            "id",
+            "name"
+        ]
 
 
 class AirplaneTypeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = AirplaneType
-        fields = ["id", "name"]
+        fields = [
+            "id",
+            "name"
+        ]
 
 
 class AirplaneTypeRetrieveSerializer(serializers.ModelSerializer):
@@ -106,25 +145,47 @@ class AirplaneTypeRetrieveSerializer(serializers.ModelSerializer):
 class AirplaneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airplane
-        fields = ["id", "name", "rows", "seats_in_row", "airplane_type"]
+        fields = [
+            "id",
+            "name",
+            "rows",
+            "seats_in_row",
+            "airplane_type"
+        ]
 
 
 class AirplaneListSerializer(serializers.ModelSerializer):
-    airplane_type = serializers.CharField(source="airplane_type.name", read_only=True)
+    airplane_type = serializers.CharField(
+        source="airplane_type.name",
+        read_only=True
+    )
 
     class Meta:
         model = Airplane
-        fields = ["id", "name", "rows", "seats_in_row", "airplane_type", "image"]
+        fields = [
+            "id",
+            "name",
+            "rows",
+            "seats_in_row",
+            "airplane_type",
+            "image"
+        ]
 
 
 class AirplaneImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airplane
-        fields = ["id", "image"]
+        fields = [
+            "id",
+            "image"
+        ]
 
 
 class AirplaneRetrieveSerializer(AirplaneSerializer):
-    airplane_type = serializers.CharField(source="airplane_type.name", read_only=True)
+    airplane_type = serializers.CharField(
+        source="airplane_type.name",
+        read_only=True
+    )
 
     class Meta:
         model = Airplane
@@ -142,7 +203,14 @@ class AirplaneRetrieveSerializer(AirplaneSerializer):
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
-        fields = ["id", "route", "airplane", "crews", "departure_time", "arrival_time"]
+        fields = [
+            "id",
+            "route",
+            "airplane",
+            "crews",
+            "departure_time",
+            "arrival_time"
+        ]
 
     def create(self, validated_data):
         crews = validated_data.pop("crews", [])
@@ -160,7 +228,9 @@ class FlightSerializer(serializers.ModelSerializer):
         crews = attrs.get("crews", [])
         crew_ids = [crew.id for crew in crews]
         if Flight.has_overlapping_crew(
-            crew_ids, attrs["departure_time"], attrs["arrival_time"]
+            crew_ids,
+            attrs["departure_time"],
+            attrs["arrival_time"]
         ):
             raise serializers.ValidationError(
                 {
@@ -233,7 +303,9 @@ class TicketSerializer(serializers.ModelSerializer):
             serializers.ValidationError,
         )
         if Ticket.objects.filter(
-            seat=attrs["seat"], row=attrs["row"], flight=attrs["flight"]
+            seat=attrs["seat"],
+            row=attrs["row"],
+            flight=attrs["flight"]
         ).exists():
             raise serializers.ValidationError(
                 {"detail": "This seat has already been taken for the selected flight"}
@@ -244,23 +316,44 @@ class TicketSerializer(serializers.ModelSerializer):
 class TicketListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = ["id", "row", "seat", "flight"]
+        fields = [
+            "id",
+            "row",
+            "seat",
+            "flight"
+        ]
 
 
 class TicketRetrieveSerializer(serializers.ModelSerializer):
-    flight_info = serializers.CharField(source="flight", read_only=True)
+    flight_info = serializers.CharField(
+        source="flight",
+        read_only=True
+    )
 
     class Meta:
         model = Ticket
-        fields = ["id", "row", "seat", "flight_info"]
+        fields = [
+            "id",
+            "row",
+            "seat",
+            "flight_info"
+        ]
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
+    tickets = TicketSerializer(
+        many=True,
+        read_only=False,
+        allow_empty=False
+    )
 
     class Meta:
         model = Order
-        fields = ["id", "created_at", "tickets"]
+        fields = [
+            "id",
+            "created_at",
+            "tickets"
+        ]
 
     @transaction.atomic()
     def create(self, validated_data):
@@ -284,16 +377,30 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderListSerializer(serializers.ModelSerializer):
-    tickets = TicketListSerializer(read_only=True, many=True)
+    tickets = TicketListSerializer(
+        read_only=True,
+        many=True
+    )
 
     class Meta:
         model = Order
-        fields = ["id", "created_at", "tickets"]
+        fields = [
+            "id",
+            "created_at",
+            "tickets"
+        ]
 
 
 class OrderRetrieveSerializer(serializers.ModelSerializer):
-    tickets = TicketRetrieveSerializer(read_only=True, many=True)
+    tickets = TicketRetrieveSerializer(
+        read_only=True,
+        many=True
+    )
 
     class Meta:
         model = Order
-        fields = ["id", "created_at", "tickets"]
+        fields = [
+            "id",
+            "created_at",
+            "tickets"
+        ]

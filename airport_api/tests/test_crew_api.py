@@ -3,8 +3,11 @@ from django.test import TestCase
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-from airport_api.models import Airplane, Crew
-from airport_api.serializers import CrewListSerializer, CrewRetrieveSerializer
+from airport_api.models import Crew
+from airport_api.serializers import (
+    CrewListSerializer,
+    CrewRetrieveSerializer
+)
 
 CREW_URL = reverse("api_airport:crew-list")
 
@@ -28,15 +31,20 @@ class AuthenticatedCrewApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test", password="Testpsw1"
+            email="Test@test.test",
+            password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
 
         self.crew_member1 = Crew.objects.create(
-            first_name="Qwerty", last_name="Johnson", flying_hours=0.0
+            first_name="Qwerty",
+            last_name="Johnson",
+            flying_hours=0.0
         )
         self.crew_member2 = Crew.objects.create(
-            first_name="John", last_name="Qwerty", flying_hours=0.0
+            first_name="John",
+            last_name="Qwerty",
+            flying_hours=0.0
         )
 
     def test_airport_list(self):
@@ -90,15 +98,21 @@ class AdminCrewTest(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test", password="Testpsw1", is_staff=True
+            email="Test@test.test",
+            password="Testpsw1",
+            is_staff=True
         )
         self.client.force_authenticate(self.user)
 
         self.crew_member1 = Crew.objects.create(
-            first_name="Qwerty", last_name="Johnson", flying_hours=0.0
+            first_name="Qwerty",
+            last_name="Johnson",
+            flying_hours=0.0
         )
         self.crew_member2 = Crew.objects.create(
-            first_name="John", last_name="Qwerty", flying_hours=0.0
+            first_name="John",
+            last_name="Qwerty",
+            flying_hours=0.0
         )
 
     def test_add_crew_member(self):
@@ -123,15 +137,24 @@ class AdminCrewTest(TestCase):
             "flying_hours": 0.0,
         }
 
-        res = self.client.put(detail_url(self.crew_member2.id), payload)
+        res = self.client.put(
+            detail_url(
+                self.crew_member2.id
+            ), payload
+        )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         crew_member = Crew.objects.get(id=self.crew_member2.id)
         for key in payload:
-            self.assertEqual(payload[key], getattr(crew_member, key))
+            self.assertEqual(
+                payload[key],
+                getattr(crew_member, key)
+            )
 
     def test_delete_crew_member(self):
-        res = self.client.delete(detail_url(self.crew_member2.id))
+        res = self.client.delete(
+            detail_url(self.crew_member2.id)
+        )
         self.assertEqual(Crew.objects.count(), 1)
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
 

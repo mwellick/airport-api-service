@@ -3,8 +3,14 @@ from django.test import TestCase
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-from airport_api.models import Airplane, AirplaneType
-from airport_api.serializers import AirplaneListSerializer, AirplaneRetrieveSerializer
+from airport_api.models import (
+    Airplane,
+    AirplaneType
+)
+from airport_api.serializers import (
+    AirplaneListSerializer,
+    AirplaneRetrieveSerializer
+)
 
 AIRPLANE_URL = reverse("api_airport:airplane-list")
 
@@ -28,12 +34,17 @@ class AuthenticatedAirplaneApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test", password="Testpsw1"
+            email="Test@test.test",
+            password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
 
-        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
-        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
+        self.airplanetype_1 = AirplaneType.objects.create(
+            name="Airplane Type 1"
+        )
+        self.airplanetype_2 = AirplaneType.objects.create(
+            name="Airplane Type 2"
+        )
 
         self.airplane_1 = Airplane.objects.create(
             name="Airplane Name 1",

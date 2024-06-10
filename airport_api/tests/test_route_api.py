@@ -4,7 +4,10 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 from airport_api.models import Route, Airport
-from airport_api.serializers import RouteListSerializer, RouteRetrieveSerializer
+from airport_api.serializers import (
+    RouteListSerializer,
+    RouteRetrieveSerializer
+)
 
 ROUTE_URL = reverse("api_airport:route-list")
 
@@ -28,22 +31,29 @@ class AuthenticatedRouteApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test", password="Testpsw1"
+            email="Test@test.test",
+            password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
 
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1", closest_big_city="Random City 1"
+            name="Airport Name 1",
+            closest_big_city="Random City 1"
         )
         self.airport_2 = Airport.objects.create(
-            name="Airport Name 2", closest_big_city="Random City 2"
+            name="Airport Name 2",
+            closest_big_city="Random City 2"
         )
 
         self.route_1 = Route.objects.create(
-            source=self.airport_1, destination=self.airport_2, distance=700.0
+            source=self.airport_1,
+            destination=self.airport_2,
+            distance=700.0
         )
         self.route_2 = Route.objects.create(
-            source=self.airport_2, destination=self.airport_1, distance=700.0
+            source=self.airport_2,
+            destination=self.airport_1,
+            distance=700.0
         )
 
     def test_route_list(self):

@@ -1,13 +1,25 @@
-from datetime import datetime, timedelta, timezone
-
+from datetime import (
+    datetime,
+    timedelta,
+    timezone
+)
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-from airport_api.models import Route, Airport, Airplane, Crew, Flight, AirplaneType
-from airport_api.serializers import FlightListSerializer, FlightRetrieveSerializer
-from airport_api.tasks import update_flying_hours
+from airport_api.models import (
+    Route,
+    Airport,
+    Airplane,
+    Crew,
+    Flight,
+    AirplaneType
+)
+from airport_api.serializers import (
+    FlightListSerializer,
+    FlightRetrieveSerializer
+)
 
 FLIGHT_URL = reverse("api_airport:flight-list")
 
@@ -30,35 +42,55 @@ class AuthenticatedFlightApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test", password="Testpsw1"
+            email="Test@test.test",
+            password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1", closest_big_city="Random City 1"
+            name="Airport Name 1",
+            closest_big_city="Random City 1"
         )
         self.airport_2 = Airport.objects.create(
-            name="Airport Name 2", closest_big_city="Random City 2"
+            name="Airport Name 2",
+            closest_big_city="Random City 2"
         )
 
         self.route_1 = Route.objects.create(
-            source=self.airport_1, destination=self.airport_2, distance=700.0
+            source=self.airport_1,
+            destination=self.airport_2,
+            distance=700.0
         )
         self.route_2 = Route.objects.create(
-            source=self.airport_2, destination=self.airport_1, distance=700.0
+            source=self.airport_2,
+            destination=self.airport_1,
+            distance=700.0
         )
         self.crew_member1 = Crew.objects.create(
-            first_name="Qwerty", last_name="Johnson", flying_hours=0.0
+            first_name="Qwerty",
+            last_name="Johnson",
+            flying_hours=0.0
         )
         self.crew_member2 = Crew.objects.create(
-            first_name="John", last_name="Qwerty", flying_hours=0.0
+            first_name="John",
+            last_name="Qwerty",
+            flying_hours=0.0
         )
 
         self.crew_member3 = Crew.objects.create(
-            first_name="Bob", last_name="Miles", flying_hours=0.0
+            first_name="Bob",
+            last_name="Miles",
+            flying_hours=0.0
         )
-        self.crew_member4 = Crew.objects.create(first_name="Alex", last_name="Ferg")
-        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
-        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
+        self.crew_member4 = Crew.objects.create(
+            first_name="Alex",
+            last_name="Ferg"
+        )
+        self.airplanetype_1 = AirplaneType.objects.create(
+            name="Airplane Type 1"
+        )
+        self.airplanetype_2 = AirplaneType.objects.create(
+            name="Airplane Type 2"
+        )
         self.airplane_1 = Airplane.objects.create(
             name="Airplane Name 1",
             rows=55,
@@ -86,8 +118,15 @@ class AuthenticatedFlightApiTests(TestCase):
         self.flight_2 = Flight.objects.create(
             route=self.route_2,
             airplane=self.airplane_2,
-            departure_time=departure_time + timedelta(days=1, hours=1, minutes=10),
-            arrival_time=arrival_time + timedelta(days=1, hours=2),
+            departure_time=departure_time + timedelta(
+                days=1,
+                hours=1,
+                minutes=10
+            ),
+            arrival_time=arrival_time + timedelta(
+                days=1,
+                hours=2
+            ),
         )
         self.flight_2.crews.add(self.crew_member3, self.crew_member4)
 
@@ -176,11 +215,11 @@ class AuthenticatedFlightApiTests(TestCase):
 
     def test_filter_flight_by_arrival_minute(self):
         arrival_minute = self.flight_2.arrival_time.minute
-        res = self.client.get(FLIGHT_URL, data={"arrival_hour": arrival_minute})
-        serializer_1 = FlightListSerializer(self.flight_1)
+        res = self.client.get(FLIGHT_URL, data={"arrival_minute": arrival_minute})
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         for result in res.data["results"]:
-            self.assertEqual(result, serializer_1.data)
+            serializer = FlightListSerializer(Flight.objects.get(id=result["id"]))
+            self.assertEqual(result, serializer.data)
 
     def test_retrieve_flight_detail(self):
         res = self.client.get(detail_url(self.flight_1.id))
@@ -214,35 +253,56 @@ class AdminFlightTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            email="Test@test.test", password="Testpsw1", is_staff=True
+            email="Test@test.test",
+            password="Testpsw1",
+            is_staff=True
         )
         self.client.force_authenticate(self.user)
         self.airport_1 = Airport.objects.create(
-            name="Airport Name 1", closest_big_city="Random City 1"
+            name="Airport Name 1",
+            closest_big_city="Random City 1"
         )
         self.airport_2 = Airport.objects.create(
-            name="Airport Name 2", closest_big_city="Random City 2"
+            name="Airport Name 2",
+            closest_big_city="Random City 2"
         )
 
         self.route_1 = Route.objects.create(
-            source=self.airport_1, destination=self.airport_2, distance=700.0
+            source=self.airport_1,
+            destination=self.airport_2,
+            distance=700.0
         )
         self.route_2 = Route.objects.create(
-            source=self.airport_2, destination=self.airport_1, distance=700.0
+            source=self.airport_2,
+            destination=self.airport_1,
+            distance=700.0
         )
         self.crew_member1 = Crew.objects.create(
-            first_name="Qwerty", last_name="Johnson", flying_hours=0.0
+            first_name="Qwerty",
+            last_name="Johnson",
+            flying_hours=0.0
         )
         self.crew_member2 = Crew.objects.create(
-            first_name="John", last_name="Qwerty", flying_hours=0.0
+            first_name="John",
+            last_name="Qwerty",
+            flying_hours=0.0
         )
 
         self.crew_member3 = Crew.objects.create(
-            first_name="Bob", last_name="Miles", flying_hours=0.0
+            first_name="Bob",
+            last_name="Miles",
+            flying_hours=0.0
         )
-        self.crew_member4 = Crew.objects.create(first_name="Alex", last_name="Ferg")
-        self.airplanetype_1 = AirplaneType.objects.create(name="Airplane Type 1")
-        self.airplanetype_2 = AirplaneType.objects.create(name="Airplane Type 2")
+        self.crew_member4 = Crew.objects.create(
+            first_name="Alex",
+            last_name="Ferg"
+        )
+        self.airplanetype_1 = AirplaneType.objects.create(
+            name="Airplane Type 1"
+        )
+        self.airplanetype_2 = AirplaneType.objects.create(
+            name="Airplane Type 2"
+        )
         self.airplane_1 = Airplane.objects.create(
             name="Airplane Name 1",
             rows=55,
@@ -270,8 +330,15 @@ class AdminFlightTests(TestCase):
         self.flight_2 = Flight.objects.create(
             route=self.route_2,
             airplane=self.airplane_2,
-            departure_time=departure_time + timedelta(days=1, hours=1, minutes=10),
-            arrival_time=arrival_time + timedelta(days=1, hours=2),
+            departure_time=departure_time + timedelta(
+                days=1,
+                hours=1,
+                minutes=10
+            ),
+            arrival_time=arrival_time + timedelta(
+                days=1,
+                hours=2
+            ),
         )
         self.flight_2.crews.add(self.crew_member3, self.crew_member4)
 
@@ -290,14 +357,28 @@ class AdminFlightTests(TestCase):
 
         for key in payload:
             if key == "route":
-                self.assertEqual(payload[key], getattr(flight, f"{key}_id"))
+                self.assertEqual(
+                    payload[key],
+                    getattr(flight, f"{key}_id")
+                )
             elif key == "airplane":
-                self.assertEqual(payload[key], getattr(flight, f"{key}_id"))
+                self.assertEqual(
+                    payload[key],
+                    getattr(flight, f"{key}_id")
+                )
             elif key == "crews":
-                crew_ids = list(flight.crews.values_list("id", flat=True))
+                crew_ids = list(
+                    flight.crews.values_list(
+                        "id",
+                        flat=True
+                    )
+                )
                 self.assertEqual(payload[key], crew_ids)
             elif key in ["departure_time", "arrival_time"]:
-                expected_date = datetime.strptime(payload[key], "%Y-%m-%dT%H:%M:%SZ")
+                expected_date = datetime.strptime(
+                    payload[key],
+                    "%Y-%m-%dT%H:%M:%SZ"
+                )
                 expected_date = expected_date.replace(tzinfo=timezone.utc)
                 self.assertEqual(expected_date, getattr(flight, key))
             else:
@@ -323,7 +404,9 @@ class AdminFlightTests(TestCase):
                 crew_ids = list(flight.crews.values_list("id", flat=True))
                 self.assertEqual(payload[key], crew_ids)
             elif key in ["departure_time", "arrival_time"]:
-                expected_date = datetime.strptime(payload[key], "%Y-%m-%dT%H:%M:%SZ")
+                expected_date = datetime.strptime(
+                    payload[key], "%Y-%m-%dT%H:%M:%SZ"
+                )
                 expected_date = expected_date.replace(tzinfo=timezone.utc)
                 self.assertEqual(expected_date, getattr(flight, key))
             else:

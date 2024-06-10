@@ -88,9 +88,13 @@ class CrewViewSet(ModelViewSet):
         first_name = self.request.query_params.get("first_name")
         last_name = self.request.query_params.get("last_name")
         if first_name:
-            queryset = queryset.filter(first_name__icontains=first_name)
+            queryset = queryset.filter(
+                first_name__icontains=first_name
+            )
         if last_name:
-            queryset = queryset.filter(last_name__icontains=last_name)
+            queryset = queryset.filter(
+                last_name__icontains=last_name
+            )
         return queryset
 
     def get_serializer_class(self):
@@ -176,7 +180,9 @@ class AirportViewSet(ModelViewSet):
         queryset = self.queryset
         name = self.request.query_params.get("name")
         if name:
-            queryset = queryset.filter(name__icontains=name)
+            queryset = queryset.filter(
+                name__icontains=name
+            )
         return queryset
 
 
@@ -209,9 +215,13 @@ class RouteViewSet(ModelViewSet):
         source = self.request.query_params.get("from")
         destination = self.request.query_params.get("to")
         if source:
-            queryset = queryset.filter(source__name__icontains=source)
+            queryset = queryset.filter(
+                source__name__icontains=source
+            )
         if destination:
-            queryset = queryset.filter(destination__name__icontains=destination)
+            queryset = queryset.filter(
+                destination__name__icontains=destination
+            )
         if self.action in ("list", "retrieve"):
             return queryset.select_related()
         return queryset
@@ -400,40 +410,83 @@ class FlightViewSet(ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        flight_id = self.request.query_params.get("id")
-        source = self.request.query_params.get("from")
-        destination = self.request.query_params.get("to")
-        airplane = self.request.query_params.get("plane_name")
-        departure_date = self.request.query_params.get("departure_date")
-        arrival_date = self.request.query_params.get("arrival_date")
-        departure_hour = self.request.query_params.get("departure_hour")
-        departure_minute = self.request.query_params.get("departure_minute")
-        arrival_hour = self.request.query_params.get("arrival_hour")
-        arrival_minute = self.request.query_params.get("arrival_minute")
+        flight_id = self.request.query_params.get(
+            "id"
+        )
+        source = self.request.query_params.get(
+            "from"
+        )
+        destination = self.request.query_params.get(
+            "to"
+        )
+        airplane = self.request.query_params.get(
+            "plane_name"
+        )
+        departure_date = self.request.query_params.get(
+            "departure_date"
+        )
+        arrival_date = self.request.query_params.get(
+            "arrival_date"
+        )
+        departure_hour = self.request.query_params.get(
+            "departure_hour"
+        )
+        departure_minute = self.request.query_params.get(
+            "departure_minute"
+        )
+        arrival_hour = self.request.query_params.get(
+            "arrival_hour"
+        )
+        arrival_minute = self.request.query_params.get(
+            "arrival_minute"
+        )
         if flight_id:
-            queryset = self.queryset.filter(id__in=flight_id)
+            queryset = self.queryset.filter(
+                id__in=flight_id
+            )
         if source:
-            queryset = self.queryset.filter(route__source__name__icontains=source)
+            queryset = self.queryset.filter(
+                route__source__name__icontains=source
+            )
         if destination:
             queryset = self.queryset.filter(
                 route__destination__name__icontains=destination
             )
         if airplane:
-            queryset = self.queryset.filter(airplane__name__icontains=airplane)
+            queryset = self.queryset.filter(
+                airplane__name__icontains=airplane
+            )
         if departure_date:
-            date = datetime.strptime(departure_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(departure_time__date=date)
+            date = datetime.strptime(
+                departure_date, "%Y-%m-%d"
+            ).date()
+            queryset = queryset.filter(
+                departure_time__date=date
+            )
         if departure_hour:
-            queryset = queryset.filter(departure_time__hour=departure_hour)
+            queryset = queryset.filter(
+                departure_time__hour=departure_hour
+            )
         if departure_minute:
-            queryset = queryset.filter(departure_time__minute=departure_minute)
+            queryset = queryset.filter(
+                departure_time__minute=departure_minute
+            )
         if arrival_date:
-            date = datetime.strptime(arrival_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(arrival_time__date=date)
+            date = datetime.strptime(
+                arrival_date,
+                "%Y-%m-%d"
+            ).date()
+            queryset = queryset.filter(
+                arrival_time__date=date
+            )
         if arrival_hour:
-            queryset = queryset.filter(arrival_time__hour=arrival_hour)
+            queryset = queryset.filter(
+                arrival_time__hour=arrival_hour
+            )
         if arrival_minute:
-            queryset = queryset.filter(arrival_time__minute=arrival_minute)
+            queryset = queryset.filter(
+                arrival_time__minute=arrival_minute
+            )
         if self.action in ("list", "retrieve"):
             return (
                 queryset.select_related()
