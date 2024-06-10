@@ -13,7 +13,9 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from celery.schedules import crontab
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-(-8=7si_ck$u!su(at+-vp621(u)=w49#2!_)@q$w!kegl6y(h"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,8 +85,7 @@ WSGI_APPLICATION = "airport_service.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-os.environ.setdefault("DJANGO_ENV", "production")
-DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
+DJANGO_ENV = os.getenv("DJANGO_ENV")
 
 if DJANGO_ENV == "production":
     DATABASES = {
@@ -104,8 +105,6 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -173,7 +172,7 @@ SIMPLE_JWT = {
 SPECTACULAR_SETTINGS = {
     "TITLE": "Airport Service API",
     "DESCRIPTION": "Airport API Serivce system "
-    "for tracking flights from airports across the whole globe.",
+                   "for tracking flights from airports across the whole globe.",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {
@@ -194,11 +193,9 @@ CELERY_TIMEZONE = "Europe/Kiev"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
-
 CELERY_BEAT_SCHEDULE = {
     "update-flying-hours-every-5-minutes": {
         "task": "airport_api.tasks.update_flying_hours",
         "schedule": crontab(minute="*/1"),
     },
 }
-
