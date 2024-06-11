@@ -15,15 +15,16 @@ This is the Airport API service system for tracking direct flights from airports
 
 ### Airport Service Features
 
-* JWT authentication
-* Admin panel /admin/
-* Managing orders and tickets
-* Creating routes (based on airports)
-* Creating airplanes and airplane types
-* Creating crews
-* Creating flights.
-* Different types of filtering
-* The ability to upload airplanes images to represent a specific kind of airplane
+* JWT authentication.
+* Admin panel /admin/.
+* Recording information about countries and cities, associating airports with their closest big city.
+* Creating and managing routes (based on airports).
+* Creating and managing airplanes and airplane types.
+* Creating and managing crews.
+* Creating and managing flights.
+* Different types of filtering.
+* The ability to upload airplanes images to represent a specific kind of airplane.
+* Recording and managing orders made by users, and handle tickets for specific flights and orders, including row and seat details.
 
 ### How to run:
 
@@ -50,3 +51,4 @@ This is the Airport API service system for tracking direct flights from airports
 ![Api Interface](api_doc4.png)
 ![Api Interface](api_doc5.png)
 ![Api Interface](api_doc6.png)
+![Api Interface](api_doc7.png)

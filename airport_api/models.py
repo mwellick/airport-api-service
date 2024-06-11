@@ -23,13 +23,42 @@ class Crew(models.Model):
         return self.full_name
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=63)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name_plural = "countries"
+
+    def __str__(self):
+        return self.name
+
+
+class City(models.Model):
+    name = models.CharField(max_length=63)
+    country = models.ForeignKey(
+        Country,
+        on_delete=models.CASCADE,
+        related_name="cities"
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name_plural = "cities"
+
+    def __str__(self):
+        return self.name
+
+
 class Airport(models.Model):
     name = models.CharField(
         max_length=255,
         unique=True
     )
-    closest_big_city = models.CharField(
-        max_length=255
+    closest_big_city = models.ForeignKey(
+        City,
+        on_delete=models.CASCADE,
+        related_name="airports"
     )
 
     class Meta:
@@ -85,7 +114,7 @@ class AirplaneType(models.Model):
 
 def airplane_image_path(instance: "Airplane", filename: str) -> pathlib.Path:
     filename = (
-        f"{slugify(instance.name)}-{uuid.uuid4()}" + pathlib.Path(filename).suffix
+            f"{slugify(instance.name)}-{uuid.uuid4()}" + pathlib.Path(filename).suffix
     )
     return pathlib.Path("upload/airplanes") / pathlib.Path(filename)
 
@@ -141,9 +170,9 @@ class Flight(models.Model):
 
     @staticmethod
     def has_overlapping_crew(
-        crew_ids: list[int],
-        departure_time: datetime,
-        arrival_time: datetime
+            crew_ids: list[int],
+            departure_time: datetime,
+            arrival_time: datetime
     ) -> bool:
         return Flight.objects.filter(
             crews__id__in=crew_ids,
@@ -204,11 +233,11 @@ class Ticket(models.Model):
 
     @staticmethod
     def validate_seat_and_rows(
-        seat: int,
-        num_seats: int,
-        row: int,
-        num_rows: int,
-        error_to_raise: Type[Exception],
+            seat: int,
+            num_seats: int,
+            row: int,
+            num_rows: int,
+            error_to_raise: Type[Exception],
     ):
         if not (1 <= seat <= num_seats):
             raise error_to_raise(
@@ -229,11 +258,11 @@ class Ticket(models.Model):
         )
 
     def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None
     ):
         self.full_clean()
         super(Ticket, self).save(

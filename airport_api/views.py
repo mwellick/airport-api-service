@@ -16,6 +16,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from .models import (
     Crew,
+    Country,
+    City,
     Airport,
     Route,
     AirplaneType,
@@ -29,6 +31,11 @@ from .serializers import (
     CrewSerializer,
     CrewListSerializer,
     CrewRetrieveSerializer,
+    CountrySerializer,
+    CountryListSerializer,
+    CitySerializer,
+    CityListSerializer,
+    CityRetrieveSerializer,
     AirportSerializer,
     AirportListSerializer,
     AirportRetrieveSerializer,
@@ -129,6 +136,122 @@ class CrewViewSet(ModelViewSet):
 
 @extend_schema_view(
     create=extend_schema(
+        summary="Create a country", description="Admin can add a country"
+    ),
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific country",
+        description="User can get a detailed info about specific country",
+    ),
+    update=extend_schema(
+        summary="Update info about specific country",
+        description="Admin can update information about specific country",
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific country",
+        description="Admin can make a partial update of specific country",
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific country",
+        description="Admin can delete specific country",
+    ),
+)
+class CountryViewSet(ModelViewSet):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get("name")
+        if name:
+            queryset = queryset.filter(
+                name__icontains=name
+            )
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CountryListSerializer
+        return CountrySerializer
+
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of countries",
+        description="User can get a list of countries",
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description="Filter by country name",
+                type=str,
+                examples=[OpenApiExample("Example", value="Jap")],
+            )
+        ],
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+@extend_schema_view(
+    create=extend_schema(
+        summary="Create a city", description="Admin can add a city"
+    ),
+    retrieve=extend_schema(
+        summary="Get a detailed info about specific city",
+        description="User can get a detailed info about specific city",
+    ),
+    update=extend_schema(
+        summary="Update info about specific city",
+        description="Admin can update information about specific city",
+    ),
+    partial_update=extend_schema(
+        summary="Partial update of specific city",
+        description="Admin can make a partial update of specific city",
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific city",
+        description="Admin can delete specific city",
+    ),
+)
+class CityViewSet(ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get("name")
+        if name:
+            queryset = queryset.filter(
+                name__icontains=name
+            )
+        if self.action in ("list", "retrieve"):
+            return queryset.select_related()
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CityListSerializer
+        elif self.action == "retrieve":
+            return CityRetrieveSerializer
+        return CitySerializer
+
+    @extend_schema(
+        methods=["GET"],
+        summary="Get list of cities",
+        description="User can get a list of cities",
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description="Filter by city name",
+                type=str,
+                examples=[OpenApiExample("Example", value="Par")],
+            )
+        ],
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+@extend_schema_view(
+    create=extend_schema(
         summary="Create an airport", description="Admin can create an airport"
     ),
     retrieve=extend_schema(
@@ -151,7 +274,6 @@ class CrewViewSet(ModelViewSet):
 class AirportViewSet(ModelViewSet):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
-    permission_classes = [IsAdminAllORIsAuthenticatedOrReadOnly]
 
     @extend_schema(
         methods=["GET"],
@@ -493,7 +615,7 @@ class FlightViewSet(ModelViewSet):
                 .prefetch_related("crews")
                 .annotate(
                     tickets_available=F("airplane__rows") * F("airplane__seats_in_row")
-                    - Count("flight_tickets")
+                                      - Count("flight_tickets")
                 )
             )
         return queryset

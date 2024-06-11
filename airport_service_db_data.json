@@ -1,6 +1,24 @@
 [
   {
     "model": "airport_api.crew",
+    "pk": 1,
+    "fields": {
+      "first_name": "Michael",
+      "last_name": "Ellipsis",
+      "flying_hours": 0.0
+    }
+  },
+  {
+    "model": "airport_api.crew",
+    "pk": 2,
+    "fields": {
+      "first_name": "John",
+      "last_name": "Qwerty",
+      "flying_hours": 0.0
+    }
+  },
+  {
+    "model": "airport_api.crew",
     "pk": 3,
     "fields": {
       "first_name": "Alex",
@@ -117,11 +135,238 @@
     }
   },
   {
+    "model": "airport_api.country",
+    "pk": 1,
+    "fields": {
+      "name": "Great Britain"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 2,
+    "fields": {
+      "name": "France"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 3,
+    "fields": {
+      "name": "Norway"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 4,
+    "fields": {
+      "name": "Finland"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 5,
+    "fields": {
+      "name": "Italy"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 6,
+    "fields": {
+      "name": "Ukraine"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 7,
+    "fields": {
+      "name": "Poland"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 8,
+    "fields": {
+      "name": "Spain"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 9,
+    "fields": {
+      "name": "Bulgaria"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 10,
+    "fields": {
+      "name": "The United States of America"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 11,
+    "fields": {
+      "name": "Germany"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 12,
+    "fields": {
+      "name": "Iceland"
+    }
+  },
+  {
+    "model": "airport_api.country",
+    "pk": 13,
+    "fields": {
+      "name": "Japan"
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 1,
+    "fields": {
+      "name": "Tokyo",
+      "country": 13
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 2,
+    "fields": {
+      "name": "London",
+      "country": 1
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 3,
+    "fields": {
+      "name": "Oslo",
+      "country": 3
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 4,
+    "fields": {
+      "name": "Helsinki",
+      "country": 4
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 5,
+    "fields": {
+      "name": "Rome",
+      "country": 5
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 6,
+    "fields": {
+      "name": "Kyiv",
+      "country": 6
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 7,
+    "fields": {
+      "name": "Lviv",
+      "country": 6
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 8,
+    "fields": {
+      "name": "Warsaw",
+      "country": 7
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 9,
+    "fields": {
+      "name": "Barcelona",
+      "country": 8
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 10,
+    "fields": {
+      "name": "Burgas",
+      "country": 9
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 11,
+    "fields": {
+      "name": "New-York",
+      "country": 10
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 12,
+    "fields": {
+      "name": "Berlin",
+      "country": 11
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 13,
+    "fields": {
+      "name": "Reykjavík",
+      "country": 12
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 14,
+    "fields": {
+      "name": "Paris",
+      "country": 2
+    }
+  },
+  {
+    "model": "airport_api.city",
+    "pk": 15,
+    "fields": {
+      "name": "Osaka",
+      "country": 13
+    }
+  },
+  {
+    "model": "airport_api.airport",
+    "pk": 1,
+    "fields": {
+      "name": "Tokyo Narita International Airport",
+      "closest_big_city": 1
+    }
+  },
+  {
+    "model": "airport_api.airport",
+    "pk": 2,
+    "fields": {
+      "name": "Osaka  International Airport",
+      "closest_big_city": 1
+    }
+  },
+  {
     "model": "airport_api.airport",
     "pk": 3,
     "fields": {
       "name": "London Heathrow Airport",
-      "closest_big_city": "London"
+      "closest_big_city": 2
     }
   },
   {
@@ -129,7 +374,7 @@
     "pk": 4,
     "fields": {
       "name": "Paris-Charles de Gaulle Airport",
-      "closest_big_city": "Paris"
+      "closest_big_city": 14
     }
   },
   {
@@ -137,7 +382,7 @@
     "pk": 5,
     "fields": {
       "name": "Oslo Gardermoen Airport",
-      "closest_big_city": "Oslo"
+      "closest_big_city": 3
     }
   },
   {
@@ -145,7 +390,7 @@
     "pk": 6,
     "fields": {
       "name": "Helsinki-Vantaa Airport",
-      "closest_big_city": "Helsinki"
+      "closest_big_city": 4
     }
   },
   {
@@ -153,15 +398,15 @@
     "pk": 7,
     "fields": {
       "name": "Leonardo da Vinci–Fiumicino Airport",
-      "closest_big_city": "Rome"
+      "closest_big_city": 5
     }
   },
   {
     "model": "airport_api.airport",
     "pk": 8,
     "fields": {
-      "name": " Lviv Danylo Halytskyi International Airport",
-      "closest_big_city": "Lviv"
+      "name": "Lviv Danylo Halytskyi International Airport",
+      "closest_big_city": 7
     }
   },
   {
@@ -169,7 +414,7 @@
     "pk": 9,
     "fields": {
       "name": "Warsaw Chopin Airport",
-      "closest_big_city": "Warsaw"
+      "closest_big_city": 8
     }
   },
   {
@@ -177,7 +422,7 @@
     "pk": 10,
     "fields": {
       "name": "Barcelona-El Prat Airport",
-      "closest_big_city": "Barcelona"
+      "closest_big_city": 9
     }
   },
   {
@@ -185,7 +430,7 @@
     "pk": 11,
     "fields": {
       "name": "Boryspil International Airport",
-      "closest_big_city": "Kyiv"
+      "closest_big_city": 6
     }
   },
   {
@@ -193,7 +438,7 @@
     "pk": 12,
     "fields": {
       "name": "Burgas Airport",
-      "closest_big_city": "Burgas"
+      "closest_big_city": 10
     }
   },
   {
@@ -201,7 +446,7 @@
     "pk": 13,
     "fields": {
       "name": "John F. Kennedy International Airport",
-      "closest_big_city": "New-York"
+      "closest_big_city": 11
     }
   },
   {
@@ -209,7 +454,7 @@
     "pk": 14,
     "fields": {
       "name": "Berlin Tegel Airport",
-      "closest_big_city": "Berlin"
+      "closest_big_city": 12
     }
   },
   {
@@ -217,7 +462,25 @@
     "pk": 15,
     "fields": {
       "name": "Reykjavík International Airport ",
-      "closest_big_city": "Reykjavík"
+      "closest_big_city": 13
+    }
+  },
+  {
+    "model": "airport_api.route",
+    "pk": 1,
+    "fields": {
+      "source": 1,
+      "destination": 2,
+      "distance": 400.0
+    }
+  },
+  {
+    "model": "airport_api.route",
+    "pk": 2,
+    "fields": {
+      "source": 2,
+      "destination": 1,
+      "distance": 400.0
     }
   },
   {
@@ -352,7 +615,7 @@
     "fields": {
       "source": 14,
       "destination": 5,
-      "distance": 930.0
+      "distance": 850.0
     }
   },
   {
@@ -361,7 +624,7 @@
     "fields": {
       "source": 5,
       "destination": 14,
-      "distance": 930.0
+      "distance": 850.0
     }
   },
   {
@@ -456,6 +719,13 @@
   },
   {
     "model": "airport_api.airplanetype",
+    "pk": 1,
+    "fields": {
+      "name": "Commercial Airplane"
+    }
+  },
+  {
+    "model": "airport_api.airplanetype",
     "pk": 2,
     "fields": {
       "name": "Private Jet"
@@ -477,6 +747,16 @@
   },
   {
     "model": "airport_api.airplane",
+    "pk": 1,
+    "fields": {
+      "name": "Airbus A380",
+      "rows": 60,
+      "seats_in_row": 10,
+      "airplane_type": 1
+    }
+  },
+  {
+    "model": "airport_api.airplane",
     "pk": 2,
     "fields": {
       "name": "Boeing 737",
@@ -490,7 +770,7 @@
     "pk": 3,
     "fields": {
       "name": "Boeing 777",
-      "rows": 37,
+      "rows": 43,
       "seats_in_row": 10,
       "airplane_type": 1
     }
@@ -543,6 +823,20 @@
       "rows": 13,
       "seats_in_row": 4,
       "airplane_type": 4
+    }
+  },
+  {
+    "model": "airport_api.flight",
+    "pk": 1,
+    "fields": {
+      "route": 1,
+      "airplane": 1,
+      "crews": [
+        1,
+        2
+      ],
+      "departure_time": "2025-06-15T14:30:00Z",
+      "arrival_time": "2025-06-15T15:50:00Z"
     }
   },
   {
@@ -716,7 +1010,7 @@
   },
   {
     "model": "airport_api.flight",
-    "pk": 12,
+    "pk": 13,
     "fields": {
       "route": 22,
       "airplane": 5,
@@ -732,7 +1026,7 @@
   },
   {
     "model": "airport_api.flight",
-    "pk": 13,
+    "pk": 14,
     "fields": {
       "route": 23,
       "airplane": 3,
@@ -751,7 +1045,7 @@
   },
   {
     "model": "airport_api.flight",
-    "pk": 14,
+    "pk": 15,
     "fields": {
       "route": 25,
       "airplane": 5,
@@ -770,7 +1064,7 @@
   },
   {
     "model": "airport_api.flight",
-    "pk": 15,
+    "pk": 16,
     "fields": {
       "route": 18,
       "airplane": 2,
@@ -964,7 +1258,7 @@
       "order": 2
     }
   },
-    {
+  {
     "model": "airport_api.ticket",
     "pk": 11,
     "fields": {
@@ -974,7 +1268,7 @@
       "order": 6
     }
   },
-    {
+  {
     "model": "airport_api.ticket",
     "pk": 12,
     "fields": {
@@ -984,7 +1278,7 @@
       "order": 7
     }
   },
-    {
+  {
     "model": "airport_api.ticket",
     "pk": 13,
     "fields": {
@@ -994,7 +1288,7 @@
       "order": 8
     }
   },
-    {
+  {
     "model": "airport_api.ticket",
     "pk": 14,
     "fields": {
@@ -1004,7 +1298,7 @@
       "order": 9
     }
   },
-    {
+  {
     "model": "airport_api.ticket",
     "pk": 15,
     "fields": {

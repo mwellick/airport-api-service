@@ -9,6 +9,8 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 from airport_api.models import (
+    Country,
+    City,
     Order,
     Ticket,
     Flight,
@@ -50,13 +52,27 @@ class AuthenticatedTicketApiTests(
             password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
+        self.country_1 = Country.objects.create(
+            name="Randon Country 1"
+        )
+        self.country_2 = Country.objects.create(
+            name="Randon Country 2"
+        )
+        self.city_1 = City.objects.create(
+            name="Random City 1",
+            country=self.country_1
+        )
+        self.city_2 = City.objects.create(
+            name="Random City 2",
+            country=self.country_2
+        )
         self.airport_1 = Airport.objects.create(
             name="Airport Name 1",
-            closest_big_city="Random City 1"
+            closest_big_city=self.city_1
         )
         self.airport_2 = Airport.objects.create(
             name="Airport Name 2",
-            closest_big_city="Random City 2"
+            closest_big_city=self.city_2
         )
 
         self.route_1 = Route.objects.create(
@@ -127,17 +143,26 @@ class AuthenticatedTicketApiTests(
                 hours=1,
                 minutes=10
             ),
-            arrival_time=arrival_time + timedelta(days=1, hours=2),
+            arrival_time=arrival_time + timedelta(
+                days=1,
+                hours=2
+            ),
         )
         self.flight_2.crews.add(self.crew_member3, self.crew_member4)
 
         self.order_1 = Order.objects.create(user=self.user)
         self.order_2 = Order.objects.create(user=self.user)
         self.ticket_1 = Ticket.objects.create(
-            row=7, seat=7, flight=self.flight_1, order=self.order_1
+            row=7,
+            seat=7,
+            flight=self.flight_1,
+            order=self.order_1
         )
         self.ticket_2 = Ticket.objects.create(
-            row=5, seat=5, flight=self.flight_2, order=self.order_2
+            row=5,
+            seat=5,
+            flight=self.flight_2,
+            order=self.order_2
         )
 
     def test_ticket_list(self):
@@ -170,7 +195,11 @@ class AuthenticatedTicketApiTests(
         self.assertEqual(res.data, serializer.data)
 
     def test_update_ticket(self):
-        payload = {"row": 7, "seat": 9, "flight": self.flight_1.id}
+        payload = {
+            "row": 7,
+            "seat": 9,
+            "flight": self.flight_1.id
+        }
 
         res = self.client.put(
             detail_url(

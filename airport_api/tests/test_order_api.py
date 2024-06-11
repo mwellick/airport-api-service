@@ -10,6 +10,8 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 from airport_api.models import (
+    Country,
+    City,
     Order,
     Ticket,
     Flight,
@@ -50,14 +52,29 @@ class AuthenticatedOrderApiTests(
             email="Test@test.test",
             password="Testpsw1"
         )
+
         self.client.force_authenticate(self.user)
+        self.country_1 = Country.objects.create(
+            name="Randon Country 1"
+        )
+        self.country_2 = Country.objects.create(
+            name="Randon Country 2"
+        )
+        self.city_1 = City.objects.create(
+            name="Random City 1",
+            country=self.country_1
+        )
+        self.city_2 = City.objects.create(
+            name="Random City 2",
+            country=self.country_2
+        )
         self.airport_1 = Airport.objects.create(
             name="Airport Name 1",
-            closest_big_city="Random City 1"
+            closest_big_city=self.city_1
         )
         self.airport_2 = Airport.objects.create(
             name="Airport Name 2",
-            closest_big_city="Random City 2"
+            closest_big_city=self.city_2
         )
 
         self.route_1 = Route.objects.create(

@@ -2,6 +2,8 @@ from django.db import transaction
 from rest_framework import serializers
 from .models import (
     Crew,
+    Country,
+    City,
     Airport,
     Route,
     AirplaneType,
@@ -41,6 +43,56 @@ class CrewRetrieveSerializer(serializers.ModelSerializer):
         ]
 
 
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = [
+            "id",
+            "name"
+        ]
+
+
+class CountryListSerializer(CountrySerializer):
+    class Meta(CountrySerializer.Meta):
+        pass
+
+
+class CountryRetrieveSerializer(CountryListSerializer):
+    class Meta(CountryListSerializer.Meta):
+        pass
+
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = [
+            "id",
+            "name",
+            "country"
+        ]
+
+
+class CityListSerializer(CitySerializer):
+    class Meta(CitySerializer.Meta):
+        pass
+
+
+class CityRetrieveSerializer(serializers.ModelSerializer):
+    country = serializers.CharField(
+        source="country.name",
+        read_only=True
+    )
+
+    class Meta:
+        model = City
+        fields = [
+            "id",
+            "name",
+            "country",
+
+        ]
+
+
 class AirportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airport
@@ -61,11 +113,20 @@ class AirportListSerializer(serializers.ModelSerializer):
 
 
 class AirportRetrieveSerializer(serializers.ModelSerializer):
+    closest_big_city = serializers.CharField(
+        source="closest_big_city.name",
+        read_only=True
+    )
+    country = serializers.CharField(
+        source="closest_big_city.country.name"
+    )
+
     class Meta:
         model = Airport
         fields = [
             "name",
             "closest_big_city",
+            "country"
         ]
 
 
@@ -228,9 +289,9 @@ class FlightSerializer(serializers.ModelSerializer):
         crews = attrs.get("crews", [])
         crew_ids = [crew.id for crew in crews]
         if Flight.has_overlapping_crew(
-            crew_ids,
-            attrs["departure_time"],
-            attrs["arrival_time"]
+                crew_ids,
+                attrs["departure_time"],
+                attrs["arrival_time"]
         ):
             raise serializers.ValidationError(
                 {
@@ -303,9 +364,9 @@ class TicketSerializer(serializers.ModelSerializer):
             serializers.ValidationError,
         )
         if Ticket.objects.filter(
-            seat=attrs["seat"],
-            row=attrs["row"],
-            flight=attrs["flight"]
+                seat=attrs["seat"],
+                row=attrs["row"],
+                flight=attrs["flight"]
         ).exists():
             raise serializers.ValidationError(
                 {"detail": "This seat has already been taken for the selected flight"}
