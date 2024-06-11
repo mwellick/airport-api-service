@@ -34,6 +34,9 @@ from .serializers import (
     CountrySerializer,
     CountryListSerializer,
     CountryRetrieveSerializer,
+    CitySerializer,
+    CityListSerializer,
+    CityRetrieveSerializer,
     AirportSerializer,
     AirportListSerializer,
     AirportRetrieveSerializer,
@@ -174,10 +177,37 @@ class CountryViewSet(ModelViewSet):
         return CountrySerializer
 
 
+class CityViewSet(ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get("name")
+        country = self.request.query_params.get("country")
+        if name:
+            queryset = queryset.filter(
+                name__icontains=name
+            )
+        if country:
+            queryset = queryset.filter(
+                country__name__icontains=country
+            )
+        if self.action in ("list", "retrieve"):
+            return queryset.select_related()
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CityListSerializer
+        elif self.action == "retrieve":
+            return CityRetrieveSerializer
+        return CitySerializer
+
+
 class AirportViewSet(ModelViewSet):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
-    permission_classes = [IsAdminAllORIsAuthenticatedOrReadOnly]
 
     @extend_schema(
         methods=["GET"],
