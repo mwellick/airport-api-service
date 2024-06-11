@@ -16,6 +16,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from .models import (
     Crew,
+    Country,
+    City,
     Airport,
     Route,
     AirplaneType,
@@ -29,6 +31,9 @@ from .serializers import (
     CrewSerializer,
     CrewListSerializer,
     CrewRetrieveSerializer,
+    CountrySerializer,
+    CountryListSerializer,
+    CountryRetrieveSerializer,
     AirportSerializer,
     AirportListSerializer,
     AirportRetrieveSerializer,
@@ -148,6 +153,27 @@ class CrewViewSet(ModelViewSet):
         description="Admin can delete specific airport",
     ),
 )
+class CountryViewSet(ModelViewSet):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get("name")
+        if name:
+            queryset = queryset.filter(
+                name__icontains=name
+            )
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CountryListSerializer
+        elif self.action == "retrieve":
+            return CountryRetrieveSerializer
+        return CountrySerializer
+
+
 class AirportViewSet(ModelViewSet):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
@@ -493,7 +519,7 @@ class FlightViewSet(ModelViewSet):
                 .prefetch_related("crews")
                 .annotate(
                     tickets_available=F("airplane__rows") * F("airplane__seats_in_row")
-                    - Count("flight_tickets")
+                                      - Count("flight_tickets")
                 )
             )
         return queryset
