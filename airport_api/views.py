@@ -184,14 +184,9 @@ class CityViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         name = self.request.query_params.get("name")
-        country = self.request.query_params.get("country")
         if name:
             queryset = queryset.filter(
                 name__icontains=name
-            )
-        if country:
-            queryset = queryset.filter(
-                country__name__icontains=country
             )
         if self.action in ("list", "retrieve"):
             return queryset.select_related()

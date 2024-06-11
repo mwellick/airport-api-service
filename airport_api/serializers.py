@@ -84,6 +84,7 @@ class CityRetrieveSerializer(serializers.ModelSerializer):
         source="country.name",
         read_only=True
     )
+
     class Meta:
         model = City
         fields = [
@@ -114,11 +115,20 @@ class AirportListSerializer(serializers.ModelSerializer):
 
 
 class AirportRetrieveSerializer(serializers.ModelSerializer):
+    closest_big_city = serializers.CharField(
+        source="closest_big_city.name",
+        read_only=True
+    )
+    country = serializers.CharField(
+        source="closest_big_city.country.name"
+    )
+
     class Meta:
         model = Airport
         fields = [
             "name",
             "closest_big_city",
+            "country"
         ]
 
 

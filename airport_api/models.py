@@ -45,7 +45,7 @@ class City(models.Model):
         verbose_name_plural = "cities"
 
     def __str__(self):
-        return f"Country: {self.country}. City: {self.name}"
+        return self.name
 
 
 class Airport(models.Model):
