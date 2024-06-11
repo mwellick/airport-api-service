@@ -27,6 +27,7 @@ class Country(models.Model):
     name = models.CharField(max_length=63)
 
     class Meta:
+        ordering = ["name"]
         verbose_name_plural = "countries"
 
     def __str__(self):
@@ -42,6 +43,7 @@ class City(models.Model):
     )
 
     class Meta:
+        ordering = ["name"]
         verbose_name_plural = "cities"
 
     def __str__(self):
@@ -56,9 +58,7 @@ class Airport(models.Model):
     closest_big_city = models.ForeignKey(
         City,
         on_delete=models.CASCADE,
-        related_name="airports",
-        null=True,
-        blank=True
+        related_name="airports"
     )
 
     class Meta:
