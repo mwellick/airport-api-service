@@ -57,12 +57,18 @@ class CountryListSerializer(CountrySerializer):
         pass
 
 
+class CountryRetrieveSerializer(CountryListSerializer):
+    class Meta(CountryListSerializer.Meta):
+        pass
+
+
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
         fields = [
             "id",
-            "name"
+            "name",
+            "country"
         ]
 
 
