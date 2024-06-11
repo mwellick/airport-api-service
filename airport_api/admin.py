@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import (
+    Country,
+    City,
     Crew,
     Airport,
     Route,
@@ -21,6 +23,8 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [TicketInline]
 
 
+admin.site.register(Country)
+admin.site.register(City)
 admin.site.register(Crew)
 admin.site.register(Airport)
 admin.site.register(Route)
