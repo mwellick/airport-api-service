@@ -3,7 +3,10 @@ from django.test import TestCase
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-from airport_api.models import Airport
+from airport_api.models import (
+    Country,
+    City,
+    Airport)
 from airport_api.serializers import (
     AirportListSerializer,
     AirportRetrieveSerializer
@@ -35,14 +38,27 @@ class AuthenticatedAirportApiTests(TestCase):
             password="Testpsw1"
         )
         self.client.force_authenticate(self.user)
-
+        self.country_1 = Country.objects.create(
+            name="Randon Country 1"
+        )
+        self.country_2 = Country.objects.create(
+            name="Randon Country 2"
+        )
+        self.city_1 = City.objects.create(
+            name="Random City 1",
+            country=self.country_1
+        )
+        self.city_2 = City.objects.create(
+            name="Random City 2",
+            country=self.country_2
+        )
         self.airport_1 = Airport.objects.create(
             name="Airport Name 1",
-            closest_big_city="Random City 1"
+            closest_big_city=self.city_1
         )
         self.airport_2 = Airport.objects.create(
             name="Airport Name 2",
-            closest_big_city="Random City 2"
+            closest_big_city=self.city_2
         )
 
     def test_airport_list(self):
@@ -94,13 +110,21 @@ class AdminAirportTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
+        self.country = Country.objects.create(
+            name="Random Country"
+        )
+        self.city_1 = City.objects.create(
+            name="Random City 1",
+            country=self.country
+        )
+
         self.airport_1 = Airport.objects.create(
             name="Airport Name 1",
-            closest_big_city="Random City 1"
+            closest_big_city=self.city_1
         )
 
     def test_create_airport(self):
-        payload = {"name": "Name", "closest_big_city": "City"}
+        payload = {"name": "Name", "closest_big_city": self.city_1.id}
         res = self.client.post(AIRPORT_URL, payload)
 
         airport = Airport.objects.get(id=res.data["id"])
@@ -108,12 +132,16 @@ class AdminAirportTests(TestCase):
         self.assertEqual(Airport.objects.count(), 2)
 
         for key in payload:
-            self.assertEqual(payload[key], getattr(airport, key))
+            if key == "closest_big_city":
+                city_id = getattr(airport, key).id
+                self.assertEqual(payload[key], city_id)
+            else:
+                self.assertEqual(payload[key], getattr(airport, key))
 
     def test_update_airport(self):
         payload = {
             "name": "Updated Name",
-            "closest_big_city": "Updated City"
+            "closest_big_city": self.city_1.id
         }
         res = self.client.put(
             detail_url(
@@ -124,7 +152,11 @@ class AdminAirportTests(TestCase):
 
         airport = Airport.objects.get(id=self.airport_1.id)
         for key in payload:
-            self.assertEqual(payload[key], getattr(airport, key))
+            if key == "closest_big_city":
+                city_id = getattr(airport, key).id
+                self.assertEqual(payload[key], city_id)
+            else:
+                self.assertEqual(payload[key], getattr(airport, key))
 
     def test_delete_airport(self):
         res = self.client.delete(detail_url(self.airport_1.id))
