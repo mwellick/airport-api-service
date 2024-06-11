@@ -57,14 +57,6 @@ class CountryListSerializer(CountrySerializer):
         pass
 
 
-class CountryRetrieveSerializer(CountryListSerializer):
-    class Meta:
-        model = Country
-        exclude = [
-            "id"
-        ]
-
-
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
