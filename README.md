@@ -45,6 +45,7 @@ This is the Airport API service system for tracking direct flights from airports
 **email**: `qwe@qwerty.com`  
 **password**: `Qwerty123`
 
+![Api Diagram](airport_api_diagram.png)
 ![Api Interface](api_doc1.png)
 ![Api Interface](api_doc2.png)
 ![Api Interface](api_doc3.png)
