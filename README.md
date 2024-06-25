@@ -27,6 +27,7 @@ This is the Airport API service system for tracking direct flights from airports
 * Recording and managing orders made by users, and handle tickets for specific flights and orders, including row and seat details.
 
 ### How to run:
+#### Using Docker
 
 - Copy .env.sample -> .env and fill with all required data
 - `docker-compose up --build`
@@ -34,6 +35,20 @@ This is the Airport API service system for tracking direct flights from airports
 - `docker-compose exec -ti airport python manage.py loaddata airport_service_db_data.json`
 - Create admin user (Optional)
 - `docker-compose exec -ti airport python manage.py createsuperuser`
+
+#### Using GitHub
+```bash
+git clone https://github.com/mwellick/airport-api-service.git
+cd airport-api-service/airport_service
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Apply migrations and run the server
+python manage.py migrate
+python manage.py runserver
+python manage.py loaddata airport_service_db_data.json
+```
 
 ### Test admin user:
 
@@ -53,3 +68,6 @@ This is the Airport API service system for tracking direct flights from airports
 ![Api Interface](api_doc5.png)
 ![Api Interface](api_doc6.png)
 ![Api Interface](api_doc7.png)
+
+## Copyright
+Copyright (c) 2024 Michael Korotia
