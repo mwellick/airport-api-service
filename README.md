@@ -59,7 +59,7 @@ python manage.py loaddata airport_service_db_data.json
 
 **email**: `qwe@qwerty.com`  
 **password**: `Qwerty123`
-
+## DB Structure
 ![Api Diagram](airport_diagram.png)
 ![Api Interface](api_doc1.png)
 ![Api Interface](api_doc2.png)
