@@ -65,9 +65,6 @@ python manage.py loaddata airport_service_db_data.json
 ![Api Interface](api_doc2.png)
 ![Api Interface](api_doc3.png)
 ![Api Interface](api_doc4.png)
-![Api Interface](api_doc5.png)
-![Api Interface](api_doc6.png)
-![Api Interface](api_doc7.png)
 
 ## Copyright
 Copyright (c) 2024 Michael Korotia
